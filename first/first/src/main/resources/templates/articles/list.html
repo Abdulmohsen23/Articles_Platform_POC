@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base-layout :: html(content=~{::div})}">
+<body>
+<div class="articles-container">
+    <!-- Page Header -->
+    <div class="container">
+        <header class="articles-header mb-5">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 mb-3" th:text="${#locale.language == 'ar' ? 'المقالات' : 'Latest Articles'}">
+                        Latest Articles
+                    </h1>
+                    <p class="lead text-secondary"
+                       th:text="${#locale.language == 'ar' ? 'اكتشف الرؤى والدروس والاتجاهات في مجال التكنولوجيا والتطوير' : 'Discover insights, tutorials, and trends in technology and development'}">
+                        Discover insights, tutorials, and trends in technology and development.
+                    </p>
+                </div>
+                <div class="col-lg-6">
+                    <form class="search-form" th:action="@{/articles/search}" method="get">
+                        <div class="input-group">
+                            <input class="form-control search-input"
+                                   type="search"
+                                   name="keyword"
+                                   th:placeholder="${#locale.language == 'ar' ? 'ابحث في المقالات...' : 'Search articles...'}"
+                                   th:value="${param.keyword}">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </header>
+
+        <!-- Layout Toggle -->
+        <div class="layout-toggle mb-4">
+            <div class="btn-group">
+                <button class="btn btn-outline-primary active" data-layout="grid">
+                    <i class="fas fa-th-large"></i>
+                </button>
+                <button class="btn btn-outline-primary" data-layout="list">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Articles Grid -->
+        <div class="articles-grid layout-view active" id="gridView" th:if="${!#lists.isEmpty(articles)}">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <div class="col" th:each="article : ${articles}">
+                    <article class="card h-100 article-card">
+                        <div class="article-image-wrapper">
+                            <img th:if="${article.coverImagePath}"
+                                 th:src="${article.coverImagePath}"
+                                 class="card-img-top"
+                                 th:alt="${article.title}">
+                            <div class="domain-tag" th:text="${article.domain}">Domain</div>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title">
+                                <a th:href="@{/articles/{id}(id=${article.id})}"
+                                   class="text-decoration-none stretched-link"
+                                   th:text="${article.title}">Article Title</a>
+                            </h3>
+                            <p class="card-text" th:text="${article.brief}">Brief description</p>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="author">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span th:text="${article.author.name}">Author Name</span>
+                                </div>
+                                <div class="date">
+                                    <i class="far fa-calendar-alt"></i>
+                                    <span th:text="${#temporals.format(article.publishedAt, 'MMM dd')}">Date</span>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+
+        <!-- List Layout -->
+        <div class="articles-list layout-view" id="listView" th:if="${!#lists.isEmpty(articles)}">
+            <div class="row">
+                <div class="col-12">
+                    <div th:each="article : ${articles}" class="list-article-card">
+                        <div class="d-flex">
+                            <div class="list-article-image">
+                                <img th:if="${article.coverImagePath}"
+                                     th:src="${article.coverImagePath}"
+                                     th:alt="${article.title}">
+                            </div>
+                            <div class="list-article-content">
+                                <div class="domain-tag" th:text="${article.domain}">Domain</div>
+                                <h3 class="card-title">
+                                    <a th:href="@{/articles/{id}(id=${article.id})}"
+                                       class="text-decoration-none stretched-link"
+                                       th:text="${article.title}">Article Title</a>
+                                </h3>
+                                <p th:text="${article.brief}">Brief description</p>
+                                <div class="article-meta">
+                                    <div class="author">
+                                        <i class="fas fa-user-circle"></i>
+                                        <span th:text="${article.author.name}">Author Name</span>
+                                    </div>
+                                    <div class="date">
+                                        <i class="far fa-calendar-alt"></i>
+                                        <span th:text="${#temporals.format(article.createdAt, 'MMM dd')}">Date</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <nav th:if="${totalPages > 1}" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <!-- Previous Page -->
+                <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+                    <a class="page-link" th:href="@{/articles(page=${currentPage - 1})}"
+                       th:text="${#locale.language == 'ar' ? 'السابق' : 'Previous'}">
+                        Previous
+                    </a>
+                </li>
+
+                <!-- Page Numbers -->
+                <li class="page-item"
+                    th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:classappend="${pageNum == currentPage ? 'active' : ''}">
+                    <a class="page-link"
+                       th:href="@{/articles(page=${pageNum})}"
+                       th:text="${pageNum + 1}">1</a>
+                </li>
+
+                <!-- Next Page -->
+                <li class="page-item" th:classappend="${currentPage == totalPages - 1 ? 'disabled' : ''}">
+                    <a class="page-link" th:href="@{/articles(page=${currentPage + 1})}"
+                       th:text="${#locale.language == 'ar' ? 'التالي' : 'Next'}">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Empty State -->
+        <div th:if="${#lists.isEmpty(articles)}" class="empty-state text-center py-5">
+            <div class="empty-state-icon mb-4">
+                <i class="fas fa-newspaper fa-4x text-secondary"></i>
+            </div>
+            <h2 class="h3 mb-3" th:text="${#locale.language == 'ar' ? 'لا توجد مقالات متاحة' : 'No Articles Available'}">
+                No Articles Available
+            </h2>
+            <p class="text-secondary" th:text="${#locale.language == 'ar' ? 'لم يتم نشر أي مقالات بعد' : 'No articles have been published yet.'}">
+                No articles have been published yet.
+            </p>
+        </div>
+    </div>
+
+    <style>
+        /* Articles Container */
+        .articles-container {
+            padding: 3rem 0;
+        }
+
+        /* Search Form */
+        .search-form {
+            max-width: 500px;
+            margin-left: auto;
+        }
+
+        .search-input {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            border: 2px solid var(--border-color);
+            padding: 0.8rem 1.2rem;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        /* Featured Article */
+        .featured-card {
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .featured-image {
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .featured-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .featured-content {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .featured-card .card-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Article Cards */
+        .article-card {
+            border: none;
+            border-radius: 12px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: var(--card-bg);
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-image-wrapper {
+            position: relative;
+            height: 240px;
+            overflow: hidden;
+        }
+
+        .article-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .article-card:hover .article-image-wrapper img {
+            transform: scale(1.05);
+        }
+
+        .domain-tag {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .list-article-card:hover .domain-tag,
+        .article-card:hover .domain-tag {
+            opacity: 1;
+        }
+
+        .article-card .card-body {
+            padding: 1.5rem;
+        }
+
+        .article-card .card-title {
+            font-size: 1.35rem;
+            margin-bottom: 1rem;
+        }
+
+        .article-card .card-title a {
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .article-card .card-text {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .article-card .card-footer {
+            background: none;
+            border-top: 1px solid var(--border-color);
+            padding: 1rem 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+
+        .author, .date {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Pagination Styles */
+        .articles-pagination {
+            margin-top: 4rem;
+            margin-bottom: 2rem;
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .pagination-numbers {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pagination-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: var(--text-primary);
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .pagination-number:hover {
+            background-color: var(--background-secondary);
+            color: var(--primary-color);
+        }
+
+        .pagination-number.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .pagination-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .pagination-arrow:hover:not(.disabled) {
+            background-color: var(--background-secondary);
+            color: var(--primary-color);
+        }
+
+        .pagination-arrow.disabled {
+            color: var(--text-secondary);
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination-ellipsis {
+            color: var(--text-secondary);
+            padding: 0 0.5rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            padding: 5rem 0;
+        }
+
+        .empty-state-icon {
+            color: var(--text-secondary);
+            opacity: 0.5;
+        }
+
+        /* RTL Support */
+        [dir="rtl"] .search-input {
+            border-radius: 0 4px 4px 0;
+        }
+
+        [dir="rtl"] .domain-tag {
+            right: auto;
+            left: 1rem;
+        }
+
+        [dir="rtl"] .pagination-arrow .fa-chevron-left {
+            transform: rotate(180deg);
+        }
+
+        [dir="rtl"] .pagination-arrow .fa-chevron-right {transform: rotate(180deg);
+        }
+
+
+        .articles-header {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUp 0.6s ease forwards;
+        }
+
+        .layout-toggle {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: slideUp 0.5s ease forwards;
+            animation-delay: 0.2s;
+        }
+
+        /* Grid View Animations */
+        .articles-grid .article-card {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUp 0.5s ease forwards;
+        }
+
+        /* Staggered animations for grid items */
+        .articles-grid .article-card:nth-child(1) { animation-delay: 0.2s; }
+        .articles-grid .article-card:nth-child(2) { animation-delay: 0.3s; }
+        .articles-grid .article-card:nth-child(3) { animation-delay: 0.4s; }
+        .articles-grid .article-card:nth-child(4) { animation-delay: 0.5s; }
+        .articles-grid .article-card:nth-child(5) { animation-delay: 0.6s; }
+        .articles-grid .article-card:nth-child(6) { animation-delay: 0.7s; }
+
+        /* List View Animations */
+        .articles-list .list-article-card {
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        /* Staggered animations for list items */
+        .articles-list .list-article-card:nth-child(1) { animation-delay: 0.2s; }
+        .articles-list .list-article-card:nth-child(2) { animation-delay: 0.3s; }
+        .articles-list .list-article-card:nth-child(3) { animation-delay: 0.4s; }
+        .articles-list .list-article-card:nth-child(4) { animation-delay: 0.5s; }
+        .articles-list .list-article-card:nth-child(5) { animation-delay: 0.6s; }
+        .articles-list .list-article-card:nth-child(6) { animation-delay: 0.7s; }
+
+        /* Pagination Animation */
+        .pagination {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: slideUp 0.5s ease forwards;
+            animation-delay: 0.8s;
+        }
+
+        /* Empty State Animation */
+        .empty-state {
+            opacity: 0;
+            transform: scale(0.95);
+            animation: scaleIn 0.6s ease forwards;
+            animation-delay: 0.2s;
+        }
+
+        /* Layout Transition Animations */
+        .layout-view {
+            transition: opacity 0.3s ease-out;
+        }
+
+        .layout-view.active {
+            opacity: 1;
+        }
+
+        /* Search Form Animation */
+        .search-form {
+            opacity: 0;
+            transform: translateY(-10px);
+            animation: slideDown 0.5s ease forwards;
+            animation-delay: 0.3s;
+        }
+
+        /* Card Hover Animations */
+        .article-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .article-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .article-card .card-img-top {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .article-card:hover .card-img-top {
+            transform: scale(1.1);
+        }
+
+        /* Domain Tag Animation */
+        .domain-tag {
+            transition: all 0.3s ease;
+        }
+
+        .article-card:hover .domain-tag {
+            transform: translateY(-3px);
+        }
+
+        /* RTL Support for Animations */
+        [dir="rtl"] .articles-list .list-article-card {
+            transform: translateX(20px);
+        }
+
+
+        /* Add these styles to your existing style section */
+
+        /* Header Text Animations */
+        .articles-header .display-4 {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .articles-header .lead {
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeInUp 0.6s ease forwards;
+            animation-delay: 0.2s;
+        }
+
+        /* Article Card Text Animations */
+        .article-card .card-title {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeInUp 0.5s ease forwards;
+            animation-delay: 0.3s;
+        }
+
+        .article-card .card-text {
+            opacity: 0;
+            transform: translateY(8px);
+            animation: fadeInUp 0.5s ease forwards;
+            animation-delay: 0.4s;
+        }
+
+        .article-card .author,
+        .article-card .date {
+            opacity: 0;
+            transform: translateY(5px);
+            animation: fadeInUp 0.5s ease forwards;
+            animation-delay: 0.5s;
+        }
+
+        /* List View Text Animations */
+        .list-article-content h3 {
+            opacity: 0;
+            transform: translateX(-15px);
+            animation: fadeInRight 0.5s ease forwards;
+            animation-delay: 0.3s;
+        }
+
+        .list-article-content p {
+            opacity: 0;
+            transform: translateX(-10px);
+            animation: fadeInRight 0.5s ease forwards;
+            animation-delay: 0.4s;
+        }
+
+        .list-article-content .article-meta {
+            opacity: 0;
+            transform: translateX(-5px);
+            animation: fadeInRight 0.5s ease forwards;
+            animation-delay: 0.5s;
+        }
+
+        /* Domain Tag Animation Enhancement */
+        .domain-tag {
+            animation: popIn 0.5s ease forwards;
+            animation-delay: 0.6s;
+        }
+
+        /* RTL Text Animation Support */
+        [dir="rtl"] .list-article-content h3,
+        [dir="rtl"] .list-article-content p,
+        [dir="rtl"] .list-article-content .article-meta {
+            transform: translateX(15px);
+            animation-name: fadeInLeft;
+        }
+
+        /* Animation Keyframes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            70% {
+                transform: scale(1.1);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        /* Animation Keyframes */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 991px) {
+            .featured-image {
+                height: 300px;
+            }
+
+            .featured-card .card-title {
+                font-size: 1.5rem;
+            }
+
+            .search-form {
+                margin: 2rem auto 0;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .articles-container {
+                padding: 1.5rem 0;
+            }
+
+            .featured-image {
+                height: 200px;
+            }
+
+            .featured-content {
+                padding: 1.5rem;
+            }
+
+            .article-image-wrapper {
+                height: 200px;
+            }
+
+            .pagination-number {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+
+            .pagination-arrow {
+                width: 35px;
+                height: 35px;
+            }
+
+            .pagination-numbers {
+                gap: 0.25rem;
+            }
+
+            .display-4 {
+                font-size: 2rem;
+            }
+
+            .lead {
+                font-size: 1rem;
+            }
+        }
+        /* Pagination Styles */
+        .pagination {
+            margin: 3rem 0;
+        }
+
+        .page-link {
+            color: var(--text-primary);
+            border: none;
+            padding: 0.75rem 1rem;
+            margin: 0 0.25rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        .list-article-content .domain-tag {
+            position: absolute;
+            right: 1rem;
+            top: 0;
+        }
+
+        [dir="rtl"] .list-article-content .domain-tag {
+            right: auto;
+            left: 1rem;
+        }
+        .page-link:hover {
+            background-color: var(--background-secondary);
+            color: var(--primary-color);
+        }
+
+        .page-item.active .page-link {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .page-item.disabled .page-link {
+            color: var(--text-secondary);
+            opacity: 0.5;
+            background-color: transparent;
+        }
+
+        /* RTL Support for Pagination */
+        [dir="rtl"] .page-link {
+            margin: 0 0.25rem;
+        }
+
+        /* Layout Toggle */
+        .layout-toggle {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .layout-view {
+            display: none;
+        }
+
+        .layout-view.active {
+            display: block;
+        }
+
+        /* List Layout */
+        .list-article-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .list-article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .list-article-image {
+            width: 300px;
+            min-width: 300px;
+            height: 200px;
+            margin-right: 2rem;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .list-article-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .list-article-content {
+            flex: 1;
+            position: relative;
+        }
+
+        .list-article-content h3 {
+            margin: 1rem 0;
+        }
+
+        .list-article-content h3 a {
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        [dir="rtl"] .list-article-image {
+            margin-right: 0;
+            margin-left: 2rem;
+        }
+
+        [dir="rtl"] .list-article-content {
+            text-align: right;
+        }
+
+        [dir="rtl"] .article-meta {
+            flex-direction: row-reverse;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for first visit
+            const isFirstVisit = !sessionStorage.getItem('visited');
+
+            // Layout toggle functionality
+            const layoutButtons = document.querySelectorAll('.layout-toggle button');
+            const gridView = document.getElementById('gridView');
+            const listView = document.getElementById('listView');
+
+            function animateTextElements(container) {
+                if (!isFirstVisit) return;
+
+                const textElements = container.querySelectorAll(`
+            .card-title,
+            .card-text,
+            .author,
+            .date,
+            .domain-tag
+        `);
+
+                textElements.forEach((el, index) => {
+                    el.style.animation = 'none';
+                    el.offsetHeight; // Trigger reflow
+                    el.style.animation = `fadeInUp 0.5s ease forwards ${0.3 + (index * 0.1)}s`;
+                });
+            }
+
+            function switchLayout(layout) {
+                // Update button states
+                layoutButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.layout === layout) {
+                        btn.classList.add('active');
+                    }
+                });
+
+                // Fade out current view
+                const currentView = layout === 'grid' ? listView : gridView;
+                const newView = layout === 'grid' ? gridView : listView;
+
+                // Handle layout transition
+                currentView.style.opacity = '0';
+                currentView.style.transform = 'translateY(-10px)';
+
+                setTimeout(() => {
+                    currentView.style.display = 'none';
+
+                    // Show and animate new view
+                    newView.style.display = 'block';
+                    newView.style.opacity = '0';
+                    newView.style.transform = 'translateY(10px)';
+
+                    // Trigger reflow
+                    newView.offsetHeight;
+
+                    // Animate in new view
+                    newView.style.opacity = '1';
+                    newView.style.transform = 'translateY(0)';
+
+                    // Animate articles in new view
+                    const articles = newView.querySelectorAll(layout === 'grid' ? '.article-card' : '.list-article-card');
+                    articles.forEach((article, index) => {
+                        article.style.animation = 'none';
+                        article.offsetHeight; // Trigger reflow
+                        article.style.animation = layout === 'grid'
+                            ? `slideUp 0.5s ease forwards ${index * 0.1}s`
+                            : `slideIn 0.5s ease forwards ${index * 0.1}s`;
+                    });
+
+                    // Animate text elements
+                    animateTextElements(newView);
+
+                }, 300); // Match this with your CSS transition time
+
+                // Save preference
+                localStorage.setItem('preferredLayout', layout);
+            }
+
+            // Handle first visit animations
+            if (!isFirstVisit) {
+                // Reset all animations on subsequent visits
+                const animatedElements = document.querySelectorAll(`
+            .articles-header .display-4,
+            .articles-header .lead,
+            .search-form,
+            .layout-toggle,
+            .article-card,
+            .list-article-card,
+            .article-card .card-title,
+            .article-card .card-text,
+            .article-card .author,
+            .article-card .date,
+            .list-article-content h3,
+            .list-article-content p,
+            .list-article-content .article-meta,
+            .domain-tag,
+            .pagination
+        `);
+
+                animatedElements.forEach(el => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'none';
+                    el.style.animation = 'none';
+                });
+            } else {
+                // Animate header elements
+                const header = document.querySelector('.articles-header');
+                if (header) {
+                    const title = header.querySelector('.display-4');
+                    const subtitle = header.querySelector('.lead');
+
+                    if (title) {
+                        title.style.animation = 'fadeInUp 0.6s ease forwards';
+                    }
+                    if (subtitle) {
+                        subtitle.style.animation = 'fadeInUp 0.6s ease forwards 0.2s';
+                    }
+                }
+
+                // Animate search form
+                const searchForm = document.querySelector('.search-form');
+                if (searchForm) {
+                    searchForm.style.animation = 'slideDown 0.5s ease forwards 0.3s';
+                }
+            }
+
+            // Add click handlers for layout buttons
+            layoutButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const layout = this.dataset.layout;
+                    switchLayout(layout);
+                });
+            });
+
+            // Initialize with saved layout or default to grid
+            const savedLayout = localStorage.getItem('preferredLayout') || 'grid';
+            switchLayout(savedLayout);
+
+            // Card hover animations
+            const articleCards = document.querySelectorAll('.article-card, .list-article-card');
+            articleCards.forEach(card => {
+                const image = card.querySelector('img');
+                const domainTag = card.querySelector('.domain-tag');
+
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px)';
+                    if (image) {
+                        image.style.transform = 'scale(1.1)';
+                    }
+                    if (domainTag) {
+                        domainTag.style.opacity = '1';
+                        domainTag.style.transform = 'translateY(-3px)';
+                    }
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    if (image) {
+                        image.style.transform = 'scale(1)';
+                    }
+                    if (domainTag) {
+                        domainTag.style.opacity = '0';
+                        domainTag.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            // Initialize pagination animation
+            const pagination = document.querySelector('.pagination');
+            if (pagination && isFirstVisit) {
+                pagination.style.animation = 'slideUp 0.5s ease forwards 0.8s';
+            }
+
+            // Empty state animation
+            const emptyState = document.querySelector('.empty-state');
+            if (emptyState && isFirstVisit) {
+                emptyState.style.animation = 'scaleIn 0.6s ease forwards 0.2s';
+            }
+
+            // Mark as visited
+            sessionStorage.setItem('visited', 'true');
+        });
+    </script>
+</div>
+</body>
+</html>

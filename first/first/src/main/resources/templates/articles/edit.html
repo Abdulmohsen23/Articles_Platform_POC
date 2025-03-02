@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base-layout :: html(content=~{::div})}">
+<body>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <!-- Header -->
+                    <div class="text-center mb-4">
+                        <script src="https://cdn.tiny.cloud/1/nrnqxssxm6bb3rllzgcslqo1lk838lqm7jqbh4yet8ov4ip7/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+                        <i class="fas fa-edit fa-3x text-primary"></i>
+                        <h2 class="mt-2" th:text="${#locale.language == 'ar' ? 'تعديل المقال' : 'Edit Article'}">Edit Article</h2>
+                    </div>
+
+                    <!-- Alert Messages -->
+                    <div th:if="${errorMessage}" class="alert alert-danger">
+                        <span th:text="${errorMessage}">Error</span>
+                    </div>
+
+                    <form th:action="@{/articles/edit/{id}(id=${article.id})}"
+                          method="post"
+                          enctype="multipart/form-data"
+                          th:object="${article}"
+                            novalidate>
+
+                        <!-- Title -->
+                        <div class="mb-3">
+                            <label for="title" class="form-label" th:text="${#locale.language == 'ar' ? 'العنوان' : 'Title'}">Title</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-heading"></i></span>
+                                <input type="text"
+                                       class="form-control"
+                                       id="title"
+                                       th:field="*{title}"
+                                       required>
+                            </div>
+                        </div>
+
+                        <!-- Brief Description -->
+                        <div class="mb-3">
+                            <label for="brief" class="form-label" th:text="${#locale.language == 'ar' ? 'وصف مختصر' : 'Brief Description'}">Brief Description</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-align-left"></i></span>
+                                <textarea class="form-control"
+                                          id="brief"
+                                          th:field="*{brief}"
+                                          rows="3"
+                                          required></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Content Editor -->
+                        <div class="mb-4">
+                            <label for="content" class="form-label fw-bold"
+                                   th:text="${#locale.language == 'ar' ? 'المحتوى' : 'Content'}">Content</label>
+                            <textarea id="content"
+                                      name="content"
+                                      th:field="*{content}"
+                                      class="form-control"
+                                      required></textarea>
+                        </div>
+
+                        <!-- Domain Selection -->
+                        <div class="mb-3">
+                            <label for="domain" class="form-label" th:text="${#locale.language == 'ar' ? 'المجال' : 'Domain'}">Domain</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-folder"></i></span>
+                                <select class="form-select"
+                                        id="domain"
+                                        th:field="*{domain}"
+                                        required>
+                                    <option value="" th:text="${#locale.language == 'ar' ? 'اختر المجال' : 'Select Domain'}">Select Domain</option>
+                                    <option th:each="domain : ${domains}"
+                                            th:value="${domain}"
+                                            th:text="${domain}"
+                                            th:selected="${domain == article.domain}">Domain</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Keywords -->
+                        <div class="mb-3">
+                            <label for="keywords" class="form-label" th:text="${#locale.language == 'ar' ? 'الكلمات المفتاحية' : 'Keywords'}">Keywords</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-tags"></i></span>
+                                <input type="text"
+                                       class="form-control"
+                                       id="keywords"
+                                       name="keywordsInput"
+                                       th:value="${#strings.listJoin(article.keywords, ', ')}"
+                                       th:placeholder="${#locale.language == 'ar' ? 'أدخل الكلمات المفتاحية مفصولة بفواصل' : 'Enter keywords separated by commas'}">
+                            </div>
+                        </div>
+
+                        <!-- Current Cover Image Display -->
+                        <div class="mb-3" th:if="${article.coverImagePath}">
+                            <label class="form-label" th:text="${#locale.language == 'ar' ? 'الصورة الحالية' : 'Current Cover Image'}">Current Cover Image</label>
+                            <div class="current-image mb-2">
+                                <img th:src="${article.coverImagePath}"
+                                     class="img-fluid rounded"
+                                     alt="Article Cover">
+                            </div>
+                        </div>
+
+                        <!-- New Cover Image Upload -->
+                        <div class="mb-3">
+                            <!-- Cover Image -->
+                                <label for="coverImage" class="form-label fw-bold"
+                                       th:text="${#locale.language == 'ar' ? 'صورة الغلاف' : 'Cover Image'}">Cover Image</label>
+                                <input type="file"
+                                       class="form-control"
+                                       id="coverImage"
+                                       name="coverImage"
+                                       accept="image/*"
+                                       required>
+                                <div class="form-text" th:text="${#locale.language == 'ar' ? 'الحد الأقصى: 5 ميجابايت' : 'Maximum size: 5MB'}">
+                                    Maximum size: 5MB
+                                </div>
+                            <div class="form-text"
+                                 th:text="${#locale.language == 'ar' ? 'اترك هذا الحقل فارغاً للاحتفاظ بالصورة الحالية' : 'Leave empty to keep current image'}">
+                                Leave empty to keep current image
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <a th:href="@{/articles/{id}(id=${article.id})}"
+                               class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>
+                                <span th:text="${#locale.language == 'ar' ? 'إلغاء' : 'Cancel'}">Cancel</span>
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>
+                                <span th:text="${#locale.language == 'ar' ? 'حفظ التغييرات' : 'Save Changes'}">Save Changes</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            tinymce.init({
+                selector: '#content',
+                plugins: 'image table lists link media wordcount autolink code codesample directionality emoticons fullscreen insertdatetime link lists media nonbreaking pagebreak preview searchreplace table visualblocks visualchars wordcount',
+                toolbar: 'undo redo | formatselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen preview | insertfile image media link anchor codesample | ltr rtl',
+                height: 500,
+                images_upload_url: '/api/upload-image',
+                automatic_uploads: true,
+                images_reuse_filename: true,
+                file_picker_types: 'image',
+                file_picker_callback: function(cb, value, meta) {
+                    var input = document.createElement('input');
+                    input.setAttribute('type', 'file');
+                    input.setAttribute('accept', 'image/*');
+
+                    input.onchange = function() {
+                        var file = this.files[0];
+                        var reader = new FileReader();
+
+                        reader.onload = function() {
+                            var id = 'blobid' + (new Date()).getTime();
+                            var blobCache = tinymce.activeEditor.editorUpload.blobCache;
+                            var base64 = reader.result.split(',')[1];
+                            var blobInfo = blobCache.create(id, file, base64);
+                            blobCache.add(blobInfo);
+
+                            cb(blobInfo.blobUri(), { title: file.name });
+                        };
+                        reader.readAsDataURL(file);
+                    };
+
+                    input.click();
+                },
+                images_upload_handler: function (blobInfo, success, failure) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.withCredentials = false;
+                    xhr.open('POST', '/api/upload-image');
+
+                    xhr.onload = function() {
+                        if (xhr.status !== 200) {
+                            failure('HTTP Error: ' + xhr.status);
+                            return;
+                        }
+
+                        var json = JSON.parse(xhr.responseText);
+                        if (!json || typeof json.location != 'string') {
+                            failure('Invalid JSON: ' + xhr.responseText);
+                            return;
+                        }
+                        success(json.location);
+                    };
+
+                    var formData = new FormData();
+                    formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+                    xhr.send(formData);
+                },
+                content_style: `
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            font-size: 16px;
+            color: var(--text-primary);
+            background: var(--background-primary);
+        }
+    `,
+                skin: document.body.classList.contains('dark-theme') ? 'oxide-dark' : 'oxide'
+            });
+
+            // Form validation
+            const form = document.querySelector('form');
+            const errorMessages = {
+                ar: {
+                    title: 'العنوان مطلوب',
+                    brief: 'الوصف المختصر مطلوب',
+                    content: 'المحتوى مطلوب',
+                    domain: 'المجال مطلوب'
+                },
+                en: {
+                    title: 'Title is required',
+                    brief: 'Brief description is required',
+                    content: 'Content is required',
+                    domain: 'Domain is required'
+                }
+            };
+
+            function showError(element, message) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'invalid-feedback d-block';
+                errorDiv.textContent = message;
+                element.classList.add('is-invalid');
+                element.parentNode.appendChild(errorDiv);
+            }
+
+            function clearErrors() {
+                document.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
+                document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            }
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                clearErrors();
+
+                const lang = document.documentElement.lang || 'en';
+                const messages = errorMessages[lang];
+                let isValid = true;
+
+                const title = document.getElementById('title').value.trim();
+                const brief = document.getElementById('brief').value.trim();
+                const content = tinymce.get('content')?.getContent().trim();
+                const domain = document.getElementById('domain').value;
+
+                if (!title) {
+                    showError(document.getElementById('title'), messages.title);
+                    isValid = false;
+                }
+
+                if (!brief) {
+                    showError(document.getElementById('brief'), messages.brief);
+                    isValid = false;
+                }
+
+                if (!content) {
+                    showError(tinymce.get('content').getContainer(), messages.content);
+                    isValid = false;
+                }
+
+                if (!domain) {
+                    showError(document.getElementById('domain'), messages.domain);
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    form.submit();
+                }
+            });
+
+            // Image preview functionality
+            const coverImageInput = document.getElementById('coverImage');
+            if (coverImageInput) {
+                coverImageInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        const preview = document.querySelector('.current-image img');
+                        if (preview) {
+                            reader.onload = function(e) {
+                                preview.src = e.target.result;
+                            }
+                            reader.readAsDataURL(file);
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</div>
+
+<style>
+    .card {
+        background-color: white;
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .input-group-text {
+        background-color: #f8f9fa;
+        border-right: none;
+        width: 42px;
+        justify-content: center;
+    }
+
+    [dir="rtl"] .input-group-text {
+        border-left: none;
+        border-right: 1px solid #ced4da;
+    }
+
+    .input-group .form-control,
+    .input-group .form-select {
+        border-left: none;
+    }
+
+    [dir="rtl"] .input-group .form-control,
+    [dir="rtl"] .input-group .form-select {
+        border-right: none;
+        border-left: 1px solid #ced4da;
+    }
+
+    .btn-primary {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+    }
+
+    .btn-primary:hover {
+        background-color: #357ABD;
+        border-color: #357ABD;
+    }
+
+    .text-primary {
+        color: var(--accent-color) !important;
+    }
+
+    .is-invalid {
+        border-color: #dc3545 !important;
+    }
+
+    .invalid-feedback {
+        display: none;
+        width: 100%;
+        margin-top: 0.25rem;
+        font-size: 0.875em;
+        color: #dc3545;
+    }
+
+    .is-invalid ~ .invalid-feedback {
+        display: block;
+    }
+
+    /* RTL Support */
+    [dir="rtl"] .me-2 {
+        margin-left: 0.5rem !important;
+        margin-right: 0 !important;
+    }
+
+    [dir="rtl"] .toolbar .btn-group {
+        margin-left: 0.5rem !important;
+        margin-right: 0 !important;
+    }
+</style>
+</body>
+</html>

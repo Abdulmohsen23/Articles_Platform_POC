@@ -1,0 +1,2478 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:lang="${#locale.language}"
+      th:dir="${#locale.language == 'ar' ? 'rtl' : 'ltr'}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Language" th:content="${#locale.language}">
+    <title th:text="${pageTitle} ?: 'ThakAI Platform'">ThakAI Platform</title>
+
+
+    <!--    <script th:src="@{/js/animations.js}"></script>-->
+    <!--    <style th:src="@{/css/animations.css}"></style>-->
+
+    <!-- Google Fonts -->
+<!--    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"-->
+<!--          rel="stylesheet">-->
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<!--    <link th:if="${#locale.language == 'ar'}"-->
+<!--          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css"-->
+<!--          rel="stylesheet">-->
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
+
+<!--    for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Custom CSS -->
+    <style>
+
+        /* Animations */
+
+        /* Fade In Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Slide Up Animation */
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Scale Animation */
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Card Hover Effects */
+        .article-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .article-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Animated Elements */
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.8s ease forwards;
+        }
+
+        .animate-scale {
+            animation: scaleIn 0.5s ease forwards;
+        }
+
+        /* Stagger children animations */
+        .stagger-children > * {
+            opacity: 0;
+            animation: slideUp 0.5s ease forwards;
+        }
+
+        .stagger-children > *:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .stagger-children > *:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .stagger-children > *:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .stagger-children > *:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .stagger-children > *:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        /* Button Animations */
+        .btn {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Navigation Link Animations */
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Skeleton Loading Animation */
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite linear;
+        }
+
+        /* Image Hover Effects */
+        .image-zoom {
+            overflow: hidden;
+        }
+
+        .image-zoom img {
+            transition: transform 0.5s ease;
+        }
+
+        .image-zoom:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Smooth Scroll Behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Dark Mode Transition */
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Ripple Effect for Buttons */
+        .btn-ripple {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Animations ends here */
+
+        /* The Main content */
+
+        :root {
+            /* Core Colors */
+            --primary-color: #1A73E8;
+            --text-primary: #2A2A2A;
+            --text-secondary: #5F6368;
+            --background-primary: #FFFFFF;
+            --background-secondary: #F8F9FA;
+            --border-color: #E8EAED;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --card-bg: #FFFFFF;
+
+            /* Typography */
+            --font-heading: 'Merriweather', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        /* Dark Theme */
+        .dark-theme {
+            --primary-color: #8AB4F8;
+            --text-primary: #E8EAED;
+            --text-secondary: #9AA0A6;
+            --background-primary: #202124;
+            --background-secondary: #292A2D;
+            --border-color: #3C4043;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --card-bg: #292A2D;
+        }
+
+        /* Base Styles */
+        body {
+            /*font-family: var(--font-body);*/
+            font-size: 1.125rem;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background-color: var(--background-secondary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Top Navigation */
+        /*.top-nav {*/
+        /*    padding: 0.5rem 0;*/
+        /*}*/
+
+        /*.top-nav .container {*/
+        /*    max-width: 1400px;*/
+        /*}*/
+
+        /* Header & Navigation */
+        /*.navbar {*/
+        /*    background: var(--background-primary);*/
+        /*    border-bottom: 1px solid var(--border-color);*/
+        /*    padding: 1rem 0;*/
+        /*}*/
+
+        .navbar {
+            background: var(--background-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Logo Adjustments */
+        /*.navbar-brand {*/
+        /*    margin-inline: 2rem !important;*/
+        /*    padding: 0;*/
+        /*    display: flex;*/
+        /*    align-items: center;*/
+        /*}*/
+
+        .navbar-brand {
+            margin-right: 2rem;
+            padding: 0;
+        }
+
+        /*.navbar-brand img {*/
+        /*    height: 40px;*/
+        /*    width: auto;*/
+        /*    max-width: 150px;*/
+        /*    transition: transform 0.3s ease;*/
+        /*}*/
+
+        .navbar-brand img {
+            height: 60px;
+            width: auto;
+        }
+
+        /* Navigation Container */
+        /*.nav-items-container {*/
+        /*    width: 100%;*/
+        /*    display: flex;*/
+        /*    justify-content: center;*/
+        /*}*/
+
+        /*.navbar-nav {*/
+        /*    display: flex;*/
+        /*    justify-content: center;*/
+        /*    align-items: center;*/
+        /*    gap: 3rem;*/
+        /*    padding: 0;*/
+        /*}*/
+
+        .navbar-nav {
+            gap: 2rem;  /* Space between nav items */
+        }
+
+        /* Navigation Links */
+        .nav-link {
+            position: relative;
+            color: var(--text-primary) !important;
+            font-weight: 500;
+            font-size: 1rem;
+            padding: 0.5rem 1rem !important;
+            transition: color 0.2s ease;
+        }
+
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--primary-color);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        .nav-link:hover:after {
+            width: 100%;
+        }
+
+        /* Auth Buttons */
+        .auth-buttons {
+            margin-inline-start: auto;
+        }
+
+        .auth-buttons .btn {
+            font-size: 0.85rem;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1 0 auto;
+            padding: 2rem 0;
+            min-height: calc(100vh - 450px);
+        }
+
+        /* Article Cards */
+        .article-card {
+            border: none;
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 2rem;
+            background: var(--card-bg);
+            overflow: hidden;
+        }
+
+        .article-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px var(--shadow-color);
+        }
+
+        .article-image {
+            height: 250px;
+            background-color: var(--background-secondary);
+            overflow: hidden;
+        }
+
+        .article-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Buttons */
+        .btn {
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            box-shadow: 0 2px 4px var(--shadow-color);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        /* Forms */
+        .form-control {
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--background-primary);
+            color: var(--text-primary);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--background-primary);
+            padding: 3rem 0;
+            margin-top: auto;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: block;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Social Links */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .social-links a {
+            color: var(--text-secondary);
+            transition: color 0.2s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            cursor: pointer;
+        }
+
+        /* Spacing Utilities */
+        .me-2, .me-3 {
+            margin-inline-end: 0.5rem !important;
+            margin-inline-start: 0 !important;
+        }
+
+        .ms-3 {
+            margin-inline-start: 1rem !important;
+            margin-inline-end: 0 !important;
+        }
+
+        /* RTL Support */
+        [dir="rtl"] {
+            font-family: var(--font-body);
+        }
+
+        /*[dir="rtl"] .nav-link:after {*/
+        /*    left: 50%;*/
+        /*    transform: translateX(50%);*/
+        /*}*/
+
+        /* Mobile Responsiveness */
+        @media (max-width: 991px) {
+            .navbar-brand {
+                margin-inline: 1rem !important;
+            }
+
+            /*.nav-items-container {*/
+            /*    padding: 1rem 0;*/
+            /*}*/
+
+            /*.navbar-nav {*/
+            /*    gap: 1rem;*/
+            /*    padding: 1rem 0;*/
+            /*}*/
+
+            .auth-buttons {
+                margin: 0;
+            }
+
+            .auth-buttons .btn {
+                margin: 0.25rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            /*.navbar-nav {*/
+            /*    padding: 1rem 0;*/
+            /*    gap: 1rem;*/
+            /*}*/
+
+            .article-image {
+                height: 200px;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+
+            .navbar-brand img {
+                height: 40px;
+                width: auto;
+                max-width: 150px;
+            }
+
+            .navbar-brand {
+                padding: 0;
+                margin: 0;
+                display: flex;
+                align-items: center;
+            }
+        }
+
+        /* Add these styles to your existing style section */
+
+        /* Header Animations */
+        /*.top-nav {*/
+        /*    transform: translateY(-100%);*/
+        /*    animation: slideDown 0.5s ease-out forwards;*/
+        /*}*/
+
+        .navbar {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out forwards;
+            animation-delay: 0.3s;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        /* Enhanced Navigation Links */
+        .nav-item {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        .nav-item:nth-child(1) { animation-delay: 0.4s; }
+        .nav-item:nth-child(2) { animation-delay: 0.5s; }
+        .nav-item:nth-child(3) { animation-delay: 0.6s; }
+        .nav-item:nth-child(4) { animation-delay: 0.7s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Logo Animation */
+        .navbar-brand img {
+            transform: scale(0.95);
+            animation: logoScale 0.5s ease forwards;
+            animation-delay: 0.2s;
+        }
+
+        @keyframes logoScale {
+            from {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Auth Buttons Animation */
+        .auth-buttons .nav-item {
+            opacity: 0;
+            transform: translateX(20px);
+            animation: slideInLeft 0.5s ease forwards;
+        }
+
+        .auth-buttons .nav-item:nth-child(1) { animation-delay: 0.6s; }
+        .auth-buttons .nav-item:nth-child(2) { animation-delay: 0.7s; }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Footer Animations */
+        .footer {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--primary-color);
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: footerLine 0.8s ease forwards;
+            animation-play-state: paused;
+        }
+
+        @keyframes footerLine {
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        .footer .footer-title {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .footer-links li {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .social-links a {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        /* Enhanced Button Hover */
+        .btn-primary, .btn-outline-primary {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::after, .btn-outline-primary::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s ease, height 0.4s ease;
+        }
+
+        .btn-primary:hover::after, .btn-outline-primary:hover::after {
+            width: 300%;
+            height: 300%;
+        }
+
+        /* Dark Mode Toggle Animation */
+        .theme-toggle {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-toggle i {
+            transition: transform 0.5s ease;
+        }
+
+        .theme-toggle:hover i {
+            transform: rotate(180deg);
+        }
+
+        /* RTL Animations Support */
+        [dir="rtl"] .auth-buttons .nav-item {
+            transform: translateX(-20px);
+        }
+
+        [dir="rtl"] .footer::before {
+            transform-origin: right;
+        }
+
+        /* Mobile Menu Animation */
+        .navbar-collapse {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .navbar-collapse.collapsing {
+            transform: translateY(-10px);
+            opacity: 0;
+        }
+
+        .navbar-collapse.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .navbar-collapse {
+            flex-grow: 1;  /* Allow collapse to take available space */
+        }
+
+        /* Language Button Styles */
+        .btn-lang-toggle {
+            font-size: 0.75rem;  /* Smaller font size */
+            padding: 0.15rem 0.5rem;  /* More compact padding */
+            border-radius: 12px;  /* Rounded corners */
+            line-height: 1;  /* Tighter line height */
+            height: 24px;  /* Fixed height */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 45px;  /* Minimum width */
+            border: 1px solid var(--border-color);
+            background: transparent;
+        }
+
+        /* Shared styles for toggle buttons */
+        .btn-toggle {
+            font-size: 0.75rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 12px;
+            line-height: 1;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 45px;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+
+        .btn-toggle i {
+            font-size: 1.2em;
+            width: 1.5em;
+            height: 1.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-toggle:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-lang-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .btn-lang-toggle:hover {
+            background: #f5f5f5;
+        }
+
+        .btn-lang-toggle i {
+            font-size: 14px;
+        }
+
+        /* Theme toggle specific */
+        .theme-toggle {
+            padding: 0.15rem 0.5rem;
+        }
+
+        .theme-toggle i {
+            font-size: 0.75rem;
+        }
+
+        /* Controls group spacing */
+        /*.controls-group {*/
+        /*    display: flex;*/
+        /*    align-items: center;*/
+        /*    gap: 0.5rem;*/
+        /*}*/
+
+        .controls-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-left: 1rem;
+        }
+
+        /* Auth button styles */
+        .btn-auth {
+            text-decoration: none;
+            color: var(--primary-color);
+        }
+
+        .btn-auth:hover {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-auth-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .btn-auth-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+            opacity: 0.9;
+        }
+
+        /* Container adjustments */
+        .auth-buttons {
+            margin: 0;
+        }
+
+        .tooltip-container {
+            position: relative;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 1000;
+        }
+
+        /* Add a small arrow to the tooltip */
+        .tooltip::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 0 4px 4px 4px;
+            border-style: solid;
+            border-color: transparent transparent #333 transparent;
+        }
+
+        /* Show tooltip on hover */
+        .tooltip-container:hover .tooltip {
+            visibility: visible;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* Chatbot container */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        /* Toggle button */
+        .chatbot-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chatbot-toggle i {
+            font-size: 24px;
+        }
+
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Chat window */
+        .chatbot-window {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            height: 500px;
+            background-color: var(--background-primary);
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-window.hidden {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            pointer-events: none;
+        }
+
+        /* Header */
+        .chatbot-header {
+            padding: 15px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .chatbot-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 5px;
+            transition: transform 0.2s ease;
+        }
+
+        .chatbot-close:hover {
+            transform: scale(1.1);
+        }
+
+        /* Messages area */
+        .chatbot-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chatbot-message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 15px;
+            animation: messageAppear 0.3s ease;
+            line-height: 1.4;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background-color: var(--background-secondary);
+            color: var(--text-primary);
+            border-bottom-left-radius: 5px;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background-color: var(--primary-color);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        /* Domain selection */
+        .domain-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            padding: 10px;
+        }
+
+        .domain-button {
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--background-secondary);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        .domain-button:hover {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Input area */
+        .chatbot-input-container {
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chatbot-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            outline: none;
+            font-size: 0.95rem;
+            background-color: var(--background-primary);
+            color: var(--text-primary);
+            transition: border-color 0.2s ease;
+        }
+
+        .chatbot-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .chatbot-send {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chatbot-send:hover {
+            transform: scale(1.1);
+        }
+
+        /* Article cards */
+        .chatbot-article-card {
+            background-color: var(--background-secondary);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 8px;
+            transition: transform 0.2s ease;
+        }
+
+        .chatbot-article-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .chatbot-article-card h4 {
+            margin: 0 0 5px 0;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        .chatbot-article-card p {
+            margin: 0 0 8px 0;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .chatbot-article-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-block;
+            transition: color 0.2s ease;
+        }
+
+        .chatbot-article-link:hover {
+            color: var(--primary-color-dark);
+        }
+
+        /* RTL Support */
+        [dir="rtl"] .chatbot-container {
+            left: 20px;
+            right: auto;
+        }
+
+        [dir="rtl"] .chatbot-window {
+            left: 0;
+            right: auto;
+        }
+
+        [dir="rtl"] .bot-message {
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 5px;
+        }
+
+        [dir="rtl"] .user-message {
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 15px;
+        }
+
+        /* Animations */
+        @keyframes messageAppear {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scrollbar styles */
+        .chatbot-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chatbot-messages::-webkit-scrollbar-track {
+            background: var(--background-secondary);
+        }
+
+        .chatbot-messages::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        .chatbot-messages::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+
+        /* Service grid styling */
+        .chatbot-services {
+            margin-top: 10px;
+        }
+
+        .chatbot-services p {
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .service-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            background-color: var(--background-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            gap: 8px;
+        }
+
+        .service-button:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .service-button i {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+
+        .service-button span {
+            font-size: 0.85rem;
+            line-height: 1.2;
+        }
+
+        .chatbot-articles {
+            padding: 8px 0;
+        }
+
+        .chatbot-articles .intro-message {
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .chatbot-article-card {
+            background-color: var(--background-secondary);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: transform 0.2s ease;
+        }
+
+        .chatbot-article-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .chatbot-article-card .article-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0 0 8px 0;
+            color: var(--text-primary);
+        }
+
+        .chatbot-article-card .article-brief {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin: 0 0 12px 0;
+            line-height: 1.5;
+        }
+
+        .chatbot-article-card .article-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .article-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .article-meta i {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            width: 16px;  /* Fixed width for icons to align text */
+        }
+
+        .chatbot-article-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            margin-top: 4px;
+            padding-left: 22px;  /* Align with the text of author and domain */
+        }
+
+        .chatbot-article-link:hover {
+            gap: 8px;
+            opacity: 0.8;
+        }
+
+        /* RTL Support */
+        [dir="rtl"] .article-meta {
+            align-items: flex-end;
+        }
+
+        [dir="rtl"] .chatbot-article-link {
+            flex-direction: row-reverse;
+            padding-left: 0;
+            padding-right: 22px;
+        }
+
+        [dir="rtl"] .chatbot-article-link i {
+            transform: scaleX(-1);
+        }
+
+        [dir="rtl"] .article-meta span {
+            flex-direction: row-reverse;
+        }
+
+        .author-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            padding: 10px;
+        }
+
+        .author-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--background-secondary);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .author-button:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .author-button i {
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+
+        .author-button span {
+            font-size: 0.9rem;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* RTL Support */
+        [dir="rtl"] .author-button {
+            flex-direction: row-reverse;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+
+<header>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand" href="#">
+                <img src="/images/Picture2.png" alt="ThakAI Logo" class="logo-img">
+            </a>
+
+            <!-- Mobile Toggle -->
+<!--            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">-->
+<!--                <span class="navbar-toggler-icon"></span>-->
+<!--            </button>-->
+
+            <!-- Navigation Items -->
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/articles}"
+                           th:text="${#locale.language == 'ar' ? 'المقالات' : 'Articles'}">Articles</a>
+                    </li>
+                    <li class="nav-item" th:if="${session.loggedInUser != null && session.loggedInUser.role.name() == 'ADMIN'}">
+                        <a class="nav-link" th:href="@{/articles/admin/dashboard}"
+                           th:text="${#locale.language == 'ar' ? 'لوحة التحكم' : 'Dashboard'}">Dashboard</a>
+                    </li>
+                    <li class="nav-item" th:if="${session.loggedInUser != null}">
+                        <a class="nav-link" th:href="@{/articles/new}"
+                           th:text="${#locale.language == 'ar' ? 'إنشاء مقال' : 'Create Article'}">Create Article</a>
+                    </li>
+                    <li class="nav-item" th:if="${session.loggedInUser != null && session.loggedInUser.role.name() == 'USER'}">
+                        <a class="nav-link" th:href="@{/articles/myarticles}"
+                           th:text="${#locale.language == 'ar' ? 'مقالاتي' : 'My Articles'}">My Articles</a>
+                    </li>
+                    <li class="nav-item" th:if="${session.loggedInUser != null && session.loggedInUser.role.name() == 'ADMIN'}">
+                        <a class="nav-link" th:href="@{/articles/admin/pending}"
+                           th:text="${#locale.language == 'ar' ? 'المقالات المعلقة' : 'Pending Articles'}">Pending Articles</a>
+                    </li>
+                </ul>
+
+
+
+
+                <!-- Arabic  Controls -->
+                <div    th:if="${#locale.language == 'ar'}"
+                        class="d-flex align-items-center me-auto">
+                    <!-- Theme and Language Controls -->
+                    <div class="controls-group">
+                        <button class="btn-toggle theme-toggle" onclick="toggleTheme()">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                        <button
+                                class="btn-lang-toggle"
+                                onclick="toggleLanguage()"
+                                th:aria-label="${#locale.language == 'ar' ? 'Switch to English' : 'Switch to Arabic'}"
+                        >
+                            <i class="fas fa-globe"></i>
+                            <span th:text="${#locale.language == 'ar' ? 'العربية' : 'English'}"></span>
+                        </button>
+                    </div>
+
+                    <!-- Auth Buttons -->
+                    <div class="controls-group auth-buttons">
+                        <!-- Login -->
+                        <a class="btn-toggle btn-auth" th:if="${session.loggedInUser == null}"
+                           th:href="@{/users/login}"
+                           th:attr="aria-label=${#locale.language == 'ar' ? 'دخول' : 'Login'}">
+                            <i class="fas fa-sign-in-alt"></i>
+                        </a>
+
+                        <!-- Sign Up -->
+                        <a class="btn-toggle btn-auth btn-auth-primary" th:if="${session.loggedInUser == null}"
+                           th:href="@{/users/register}"
+                           th:attr="aria-label=${#locale.language == 'ar' ? 'تسجيل' : 'Sign up'}">
+                            <i class="fas fa-user-plus"></i>
+                        </a>
+
+                        <!-- Logout -->
+                        <a class="btn-toggle btn-auth" th:if="${session.loggedInUser != null}"
+                           th:href="@{/users/logout}"
+                           th:attr="aria-label=${#locale.language == 'ar' ? 'خروج' : 'Logout'}">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                    </div>
+                </div>
+
+
+
+
+                <!-- English  Controls -->
+                <div    th:if="${#locale.language == 'en'}"
+                        class="d-flex align-items-center ms-auto">
+                    <!-- Theme and Language Controls -->
+                    <div class="controls-group">
+                        <button class="btn-toggle theme-toggle" onclick="toggleTheme()">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                        <button
+                                class="btn-lang-toggle"
+                                onclick="toggleLanguage()"
+                                th:aria-label="${#locale.language == 'ar' ? 'Switch to English' : 'Switch to Arabic'}"
+                        >
+                            <i class="fas fa-globe"></i>
+                            <span th:text="${#locale.language == 'ar' ? 'العربية' : 'English'}"></span>
+                        </button>
+                    </div>
+
+                    <!-- Auth Buttons -->
+                    <div class="controls-group auth-buttons">
+                        <!-- Login -->
+                        <a class="btn-toggle btn-auth tooltip-container"
+                           th:if="${session.loggedInUser == null}"
+                           th:href="@{/users/login}"
+                           th:attr="aria-label=${#locale.language == 'ar' ? 'دخول' : 'Login'}">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span class="tooltip" th:text="${#locale.language == 'ar' ? 'دخول' : 'Login'}"></span>
+                        </a>
+
+                        <!-- Sign Up with Tooltip -->
+                        <a class="btn-toggle btn-auth btn-auth-primary tooltip-container"
+                           th:if="${session.loggedInUser == null}"
+                           th:href="@{/users/register}"
+                           th:attr="aria-label=${#locale.language == 'ar' ? 'تسجيل' : 'Sign up'}">
+                            <i class="fas fa-user-plus"></i>
+                            <span class="tooltip" th:text="${#locale.language == 'ar' ? 'تسجيل' : 'Sign up'}"></span>
+                        </a>
+
+                        <!-- Logout with Tooltip -->
+                        <a class="btn-toggle btn-auth tooltip-container"
+                           th:if="${session.loggedInUser != null}"
+                           th:href="@{/users/logout}"
+                           th:attr="aria-label=${#locale.language == 'ar' ? 'خروج' : 'Logout'}">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span class="tooltip" th:text="${#locale.language == 'ar' ? 'خروج' : 'Logout'}"></span>
+                        </a>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </nav>
+</header>
+<!--<header>-->
+<!--    &lt;!&ndash; Top Navigation &ndash;&gt;-->
+<!--    &lt;!&ndash; Top Navigation &ndash;&gt;-->
+<!--    <div class="top-nav py-2">-->
+<!--        <div class="container">-->
+<!--            <div class="d-flex justify-content-between align-items-center">-->
+<!--                &lt;!&ndash; Logo &ndash;&gt;-->
+<!--                <a class="navbar-brand" href="#">-->
+<!--                    <img src="/images/img.png" alt="ThakAI Logo" class="logo-img">-->
+<!--                </a>-->
+
+<!--                &lt;!&ndash; Right Side Controls &ndash;&gt;-->
+<!--                <div class="d-flex align-items-center">-->
+<!--                    &lt;!&ndash; Theme and Language Controls &ndash;&gt;-->
+<!--                    <div class="controls-group">-->
+<!--                        <button class="btn-toggle theme-toggle" onclick="toggleTheme()">-->
+<!--                            <i class="fas fa-moon"></i>-->
+<!--                        </button>-->
+<!--                        <button class="btn-toggle btn-lang-toggle" onclick="toggleLanguage()">-->
+<!--                            <span th:text="${#locale.language == 'ar' ? 'EN' : 'عربي'}">Lang</span>-->
+<!--                        </button>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Auth Buttons &ndash;&gt;-->
+<!--                    <div class="controls-group auth-buttons">-->
+<!--                        <a class="btn-toggle btn-auth" th:if="${session.loggedInUser == null}"-->
+<!--                           th:href="@{/users/login}"-->
+<!--                           th:text="${#locale.language == 'ar' ? 'دخول' : 'Login'}">Login</a>-->
+<!--                        <a class="btn-toggle btn-auth btn-auth-primary" th:if="${session.loggedInUser == null}"-->
+<!--                           th:href="@{/users/register}"-->
+<!--                           th:text="${#locale.language == 'ar' ? 'تسجيل' : 'Sign up'}">Sign up</a>-->
+<!--                        <a class="btn-toggle btn-auth" th:if="${session.loggedInUser != null}"-->
+<!--                           th:href="@{/users/logout}"-->
+<!--                           th:text="${#locale.language == 'ar' ? 'خروج' : 'Logout'}">Logout</a>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Main Navigation &ndash;&gt;-->
+<!--    <nav class="navbar navbar-expand-lg">-->
+<!--        <div class="container">-->
+<!--            &lt;!&ndash; Mobile Toggle &ndash;&gt;-->
+<!--            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">-->
+<!--                <span class="navbar-toggler-icon"></span>-->
+<!--            </button>-->
+
+<!--            &lt;!&ndash; Navigation Items &ndash;&gt;-->
+<!--            &lt;!&ndash; Replace the existing nav-items-container section with this &ndash;&gt;-->
+<!--            <div class="collapse navbar-collapse" id="mainNav">-->
+<!--                <div class="nav-items-container">-->
+<!--                    <ul class="navbar-nav">-->
+<!--                        <li class="nav-item">-->
+<!--                            <a class="nav-link" th:href="@{/articles}"-->
+<!--                               th:text="${#locale.language == 'ar' ? 'المقالات' : 'Articles'}">Articles</a>-->
+<!--                        </li>-->
+
+<!--                        &lt;!&ndash; Add this inside the admin navigation section &ndash;&gt;-->
+<!--                        <li class="nav-item" th:if="${session.loggedInUser != null && session.loggedInUser.role.name() == 'ADMIN'}">-->
+<!--                            <a class="nav-link" th:href="@{/articles/admin/dashboard}"-->
+<!--                               th:text="${#locale.language == 'ar' ? 'لوحة التحكم' : 'Dashboard'}">Dashboard</a>-->
+<!--                        </li>-->
+<!--                        <li class="nav-item" th:if="${session.loggedInUser != null}">-->
+<!--                            <a class="nav-link" th:href="@{/articles/new}"-->
+<!--                               th:text="${#locale.language == 'ar' ? 'إنشاء مقال' : 'Create Article'}">Create-->
+<!--                                Article</a>-->
+<!--                        </li>-->
+<!--                        <li class="nav-item"-->
+<!--                            th:if="${session.loggedInUser != null && session.loggedInUser.role.name() == 'USER'}">-->
+<!--                            <a class="nav-link" th:href="@{/articles/myarticles}"-->
+<!--                               th:text="${#locale.language == 'ar' ? 'مقالاتي' : 'My Articles'}">My Articles</a>-->
+<!--                        </li>-->
+<!--                        <li class="nav-item"-->
+<!--                            th:if="${session.loggedInUser != null && session.loggedInUser.role.name() == 'ADMIN'}">-->
+<!--                            <a class="nav-link" th:href="@{/articles/admin/pending}"-->
+<!--                               th:text="${#locale.language == 'ar' ? 'المقالات المعلقة' : 'Pending Articles'}">Pending-->
+<!--                                Articles</a>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </nav>-->
+<!--</header>-->
+
+<!-- Main Content -->
+<main>
+    <div th:replace="${content}">
+        <!-- Content will be injected here -->
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="row gy-4">
+            <!-- Newsletter Section -->
+            <div class="col-lg-4 col-md-6">
+                <h5 class="footer-title" th:text="${#locale.language == 'ar' ? 'النشرة البريدية' : 'Newsletter'}">
+                    Newsletter</h5>
+                <p class="text-secondary"
+                   th:text="${#locale.language == 'ar' ? 'كن أول من يعلم بآخر المستجدات' : 'Be the first to know about updates'}">
+                    Be the first to know about updates
+                </p>
+                <form class="newsletter-form">
+                    <input type="email"
+                           class="newsletter-input"
+                           th:placeholder="${#locale.language == 'ar' ? 'البريد الإلكتروني' : 'Email address'}">
+                    <button type="submit"
+                            class="btn btn-primary"
+                            th:text="${#locale.language == 'ar' ? 'اشتراك' : 'Subscribe'}">Subscribe
+                    </button>
+                </form>
+            </div>
+
+            <!-- Contributors Section -->
+            <div class="col-lg-3 col-md-6">
+                <h5 class="footer-title"
+                    th:text="${#locale.language == 'ar' ? 'مساهمو المحتوى' : 'Content Contributors'}">
+                    Content Contributors
+                </h5>
+                <ul class="footer-links">
+                    <li>
+                        <a href="#"
+                           th:text="${#locale.language == 'ar' ? 'التسجيل كمساهم' : 'Register as Contributor'}">
+                            Register as Contributor
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" th:text="${#locale.language == 'ar' ? 'سياسة النشر' : 'Publishing Policy'}">
+                            Publishing Policy
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" th:text="${#locale.language == 'ar' ? 'الشروط والأحكام' : 'Terms & Conditions'}">
+                            Terms & Conditions
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="col-lg-3 col-md-6">
+                <h5 class="footer-title" th:text="${#locale.language == 'ar' ? 'روابط سريعة' : 'Quick Links'}">Quick
+                    Links</h5>
+                <ul class="footer-links">
+                    <li>
+                        <a href="#" th:text="${#locale.language == 'ar' ? 'الرئيسية' : 'Home'}">Home</a>
+                    </li>
+                    <li>
+                        <a href="#" th:text="${#locale.language == 'ar' ? 'المواضيع' : 'Topics'}">Topics</a>
+                    </li>
+                    <li>
+                        <a href="#" th:text="${#locale.language == 'ar' ? 'المعجم' : 'Glossary'}">Glossary</a>
+                    </li>
+                    <li>
+                        <a href="#" th:text="${#locale.language == 'ar' ? 'الرادار' : 'Radar'}">Radar</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Support Section -->
+            <div class="col-lg-2 col-md-6">
+                <h5 class="footer-title" th:text="${#locale.language == 'ar' ? 'الدعم' : 'Support'}">Support</h5>
+                <ul class="footer-links">
+                    <li><a href="tel:8001221111">800 122 1111</a></li>
+                    <li><a href="mailto:Suggestions@sdaia.gov.sa">Suggestions@sdaia.gov.sa</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="text-center mt-4 pt-4 border-top">
+            <div class="social-links mb-3">
+                <a href="#" class="text-secondary me-3">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="text-secondary me-3">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="text-secondary me-3">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="text-secondary">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+            <p class="text-secondary mb-0"
+               th:text="${#locale.language == 'ar' ? '© ٢٠٢١-٢٠٢٤ جميع الحقوق محفوظة' : '© 2021-2024 All rights reserved'}">
+                © 2021-2024 All rights reserved
+            </p>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Theme Toggle Script -->
+<script>
+    // Theme Management
+    function setTheme(theme) {
+        const body = document.body;
+        const icon = document.querySelector('.theme-toggle i');
+
+        if (theme === 'dark') {
+            body.classList.add('dark-theme');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        } else {
+            body.classList.remove('dark-theme');
+            icon.classList.remove('fa-sun');
+            icon.classList.add('fa-moon');
+        }
+    }
+
+    function toggleTheme() {
+        const isDark = document.body.classList.contains('dark-theme');
+        const newTheme = isDark ? 'light' : 'dark';
+        const icon = document.querySelector('.theme-toggle i');
+
+        icon.style.animation = 'spin 0.5s ease';
+        icon.addEventListener('animationend', () => {
+            icon.style.animation = '';
+        }, { once: true });
+
+        localStorage.setItem('theme', newTheme);
+        setTheme(newTheme);
+    }
+
+    function toggleLanguage() {
+        const currentLang = document.documentElement.lang;
+        const newLang = currentLang === 'ar' ? 'en' : 'ar';
+        const url = new URL(window.location.href);
+        url.searchParams.set('lang', newLang);
+        window.location.href = url.toString();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Check if this is the first visit
+        const isFirstVisit = !sessionStorage.getItem('visited');
+
+        // If it's not the first visit, set final states without animations
+        if (!isFirstVisit) {
+            // Remove animation classes but ensure visibility
+            document.querySelectorAll('.animate-fade-in, .animate-slide-up, .animate-scale').forEach(el => {
+                el.classList.remove('animate-fade-in', 'animate-slide-up', 'animate-scale');
+                el.style.opacity = '1';
+                el.style.transform = 'none';
+            });
+
+            // Set final states for staggered children
+            document.querySelectorAll('.stagger-children > *').forEach(el => {
+                el.style.animation = 'none';
+                el.style.opacity = '1';
+                el.style.transform = 'none';
+            });
+
+            // Set final states for header elements
+            const topNav = document.querySelector('.top-nav');
+            const navbar = document.querySelector('.navbar');
+            if (topNav) {
+                topNav.style.animation = 'none';
+                topNav.style.transform = 'none';
+                topNav.style.opacity = '1';
+            }
+            if (navbar) {
+                navbar.style.animation = 'none';
+                navbar.style.opacity = '1';
+            }
+
+            // Set final states for nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.style.animation = 'none';
+                item.style.opacity = '1';
+                item.style.transform = 'none';
+            });
+
+            // Set final states for footer elements
+            document.querySelectorAll('.footer-title, .footer-links li, .social-links a').forEach(el => {
+                el.style.animation = 'none';
+                el.style.opacity = '1';
+                el.style.transform = 'none';
+            });
+        }
+
+        // Mark as visited
+        sessionStorage.setItem('visited', 'true');
+
+        // Theme initialization
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setTheme(prefersDark ? 'dark' : 'light');
+            localStorage.setItem('theme', prefersDark ? 'dark' : 'light');
+        }
+
+        // Listen for system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (!localStorage.getItem('theme')) {
+                setTheme(e.matches ? 'dark' : 'light');
+            }
+        });
+
+        // Initialize animations only on first visit
+        if (isFirstVisit) {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-fade-in');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            // Observe animated elements
+            document.querySelectorAll('.article-card, .animate-fade-in').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Footer animations
+            const footerObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const footer = entry.target;
+                        footer.querySelectorAll('.footer-title').forEach((title, index) => {
+                            title.style.animation = `fadeInUp 0.5s ease forwards ${index * 0.1}s`;
+                        });
+                        footerObserver.unobserve(footer);
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            const footer = document.querySelector('.footer');
+            if (footer) {
+                footerObserver.observe(footer);
+            }
+        }
+
+        // Always-active features
+        // Button ripple effect
+        document.querySelectorAll('.btn-ripple').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+
+                ripple.style.width = ripple.style.height = `${size}px`;
+                ripple.style.left = `${e.clientX - rect.left - size/2}px`;
+                ripple.style.top = `${e.clientY - rect.top - size/2}px`;
+
+                this.appendChild(ripple);
+
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Form handling
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function() {
+                const submitButton = this.querySelector('[type="submit"]');
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    const originalText = submitButton.innerHTML;
+                    submitButton.innerHTML = '<div class="loading-spinner"></div>';
+
+                    setTimeout(() => {
+                        submitButton.disabled = false;
+                        submitButton.innerHTML = originalText;
+                    }, 5000);
+                }
+            });
+        });
+
+        // Mobile menu
+        const navbar = document.querySelector('.navbar-collapse');
+        if (navbar) {
+            navbar.addEventListener('show.bs.collapse', function() {
+                if (isFirstVisit) {
+                    const navItems = this.querySelectorAll('.nav-item');
+                    navItems.forEach((item, index) => {
+                        item.style.animation = `slideInLeft 0.3s ease forwards ${index * 0.1}s`;
+                    });
+                }
+            });
+        }
+
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+
+
+<!-- Chatbot -->
+<div id="article-chatbot" class="chatbot-container">
+    <!-- Toggle Button -->
+    <button id="chatbot-toggle" class="chatbot-toggle">
+        <i class="fas fa-comments"></i>
+    </button>
+
+    <!-- Chat Window -->
+    <div id="chatbot-window" class="chatbot-window hidden">
+        <!-- Header -->
+        <div class="chatbot-header">
+            <h3 th:text="${#locale.language == 'ar' ? 'مساعد اكتشاف المقالات' : 'Article Discovery Assistant'}">
+                Article Discovery Assistant
+            </h3>
+            <button id="chatbot-close" class="chatbot-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Messages Area -->
+        <div id="chatbot-messages" class="chatbot-messages">
+            <!-- Messages will be dynamically added here -->
+        </div>
+
+        <!-- Domain Selection Area -->
+        <div id="chatbot-domain-selector" class="chatbot-domain-selector hidden">
+            <div class="domain-grid">
+                <!-- Domain buttons will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="chatbot-input-container">
+            <input type="text"
+                   id="chatbot-input"
+                   class="chatbot-input"
+                   th:placeholder="${#locale.language == 'ar' ? 'اكتب رسالة...' : 'Type a message...'}"
+                   th:dir="${#locale.language == 'ar' ? 'rtl' : 'ltr'}">
+            <button id="chatbot-send" class="chatbot-send">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var chatbot = {
+            isOpen: false,
+            currentMode: null,
+            currentDomain: null,
+            currentAuthor: null,
+            currentPage: 1,
+            articlesPerPage: 5,
+            awaitingSearchResponse: false,
+            awaitingMoreArticlesResponse: false,
+
+            domains: [
+                'Artificial Intelligence',
+                'Data Science',
+                'Web Development',
+                'Mobile Development',
+                'Cloud Computing',
+                'Cybersecurity',
+                'Machine Learning',
+                'DevOps',
+                'Blockchain',
+                'Internet of Things'
+            ],
+
+            init: function() {
+                this.chatbotToggle = document.getElementById('chatbot-toggle');
+                this.chatbotClose = document.getElementById('chatbot-close');
+                this.chatbotWindow = document.getElementById('chatbot-window');
+                this.chatbotInput = document.getElementById('chatbot-input');
+                this.chatbotSend = document.getElementById('chatbot-send');
+                this.messagesContainer = document.getElementById('chatbot-messages');
+
+                this.bindEvents();
+            },
+
+            bindEvents: function() {
+                var self = this;
+                this.chatbotToggle.addEventListener('click', function() { self.toggleChatbot(); });
+                this.chatbotClose.addEventListener('click', function() { self.toggleChatbot(); });
+                this.chatbotSend.addEventListener('click', function() { self.handleUserInput(); });
+                this.chatbotInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        self.handleUserInput();
+                    }
+                });
+            },
+
+            toggleChatbot: function() {
+                var self = this;
+                this.isOpen = !this.isOpen;
+                this.chatbotWindow.classList.toggle('hidden');
+
+                if (this.isOpen && this.messagesContainer.children.length === 0) {
+                    this.addMessage('bot', 'Hello! 👋 How can I help you discover articles today?');
+
+                    setTimeout(function() {
+                        self.showServices();
+                    }, 500);
+                }
+            },
+
+            showServices: function() {
+                var self = this;
+                var servicesHtml =
+                    '<div class="chatbot-services">' +
+                    '<p>I can help you with:</p>' +
+                    '<div class="service-grid">' +
+                    '<button class="service-button" data-service="domain">' +
+                    '<i class="fas fa-search"></i>' +
+                    '<span>Find Articles by Domain</span>' +
+                    '</button>' +
+                    '<button class="service-button" data-service="latest">' +
+                    '<i class="fas fa-clock"></i>' +
+                    '<span>Latest Articles</span>' +
+                    '</button>' +
+                    '<button class="service-button" data-service="keyword">' +
+                    '<i class="fas fa-tag"></i>' +
+                    '<span>Search by Keywords</span>' +
+                    '</button>' +
+                    '<button class="service-button" data-service="author">' +
+                    '<i class="fas fa-user"></i>' +
+                    '<span>Find by Author</span>' +
+                    '</button>' +
+                    '</div>' +
+                    '</div>';
+                this.addMessage('bot', servicesHtml, true);
+
+                document.querySelectorAll('.service-button').forEach(function(button) {
+                    button.addEventListener('click', function() {
+                        self.handleServiceSelection(button.dataset.service);
+                    });
+                });
+            },
+
+            handleServiceSelection: function(service) {
+                this.currentMode = service;
+
+                switch(service) {
+                    case 'domain':
+                        this.addMessage('bot', 'Please select a domain to explore:');
+                        this.showDomainSelection();
+                        break;
+
+                    case 'latest':
+                        this.fetchLatestArticles(false);
+                        break;
+
+                    case 'keyword':
+                        this.addMessage('bot', 'Please enter keywords to search for articles:');
+                        this.chatbotInput.placeholder = 'Enter keywords...';
+                        this.chatbotInput.focus();
+                        break;
+
+                    case 'author':
+                        this.addMessage('bot', 'Please select an author:');
+                        this.showAuthorSelection();
+                        break;
+                }
+            },
+
+            showAuthorSelection: function() {
+                var self = this;
+                var authorGrid = document.createElement('div');
+                authorGrid.className = 'author-grid';
+
+                // Show loading message
+                this.addMessage('bot', 'Loading authors list...');
+
+                // Fetch authors
+                fetch('/articles/api/chatbot/authors')
+                    .then(function(response) { return response.json(); })
+                    .then(function(data) {
+                        if (data.authors && data.authors.length > 0) {
+                            data.authors.forEach(function(author) {
+                                var button = document.createElement('button');
+                                button.className = 'author-button';
+                                button.innerHTML = `
+                                <i class="fas fa-user"></i>
+                                <span>${author.name}</span>
+                            `;
+                                button.addEventListener('click', function() {
+                                    self.searchByAuthor(author.name);
+                                });
+                                authorGrid.appendChild(button);
+                            });
+
+                            var messageDiv = document.createElement('div');
+                            messageDiv.className = 'chatbot-message bot-message';
+                            messageDiv.appendChild(authorGrid);
+                            self.messagesContainer.appendChild(messageDiv);
+                            self.messagesContainer.scrollTop = self.messagesContainer.scrollHeight;
+                        } else {
+                            self.addMessage('bot', 'No authors found.');
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error('Error fetching authors:', error);
+                        self.addMessage('bot', 'Sorry, I encountered an error fetching the authors list.');
+                    });
+            },
+
+            showDomainSelection: function() {
+                var self = this;
+                var domainGrid = document.createElement('div');
+                domainGrid.className = 'domain-grid';
+
+                this.domains.forEach(function(domain) {
+                    var button = document.createElement('button');
+                    button.className = 'domain-button';
+                    button.innerHTML = `
+                    <i class="fas fa-folder"></i>
+                    <span>${domain}</span>
+                `;
+                    button.addEventListener('click', function() {
+                        self.handleDomainSelection(domain);
+                    });
+                    domainGrid.appendChild(button);
+                });
+
+                var messageDiv = document.createElement('div');
+                messageDiv.className = 'chatbot-message bot-message';
+                messageDiv.appendChild(domainGrid);
+                this.messagesContainer.appendChild(messageDiv);
+                this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
+            },
+
+            handleUserInput: function() {
+                var message = this.chatbotInput.value.trim();
+                if (!message) return;
+
+                this.addMessage('user', message);
+                this.chatbotInput.value = '';
+
+                // Handle response to "Would you like to try another search?"
+                if (this.awaitingSearchResponse) {
+                    if (message.toLowerCase() === 'no') {
+                        this.addMessage('bot', 'Thank you for using our chatbot! Click the button to reopen when needed.');
+                        var self = this;
+                        setTimeout(function() {
+                            self.toggleChatbot();
+                            self.awaitingSearchResponse = false;
+                            self.currentMode = null;
+                            self.currentDomain = null;
+                            self.currentAuthor = null;
+                            self.currentPage = 1;
+                        }, 1000);
+                        return;
+                    } else {
+                        this.awaitingSearchResponse = false;
+                        this.showServices();
+                        return;
+                    }
+                }
+
+                // Handle response to "Would you like to see more articles?"
+                if (this.awaitingMoreArticlesResponse) {
+                    if (message.toLowerCase() !== 'no') {
+                        this.currentPage++;
+                        if (this.currentMode === 'latest') {
+                            this.fetchLatestArticles(true);
+                        } else if (this.currentMode === 'author' && this.currentAuthor) {
+                            this.searchByAuthor(this.currentAuthor, true);
+                        } else if (this.currentDomain) {
+                            this.handleDomainSelection(this.currentDomain, true);
+                        }
+                    } else {
+                        this.addMessage('bot', 'Would you like to try another search?');
+                        this.awaitingSearchResponse = true;
+                        this.awaitingMoreArticlesResponse = false;
+                    }
+                    return;
+                }
+
+                switch(this.currentMode) {
+                    case 'latest':
+                        this.fetchLatestArticles(false);
+                        break;
+                    case 'keyword':
+                        if (message.length < 2) {
+                            this.addMessage('bot', 'Please enter at least 2 characters for search.');
+                            return;
+                        }
+                        this.searchByKeywords(message);
+                        break;
+                    case 'author':
+                        if (message.length < 2) {
+                            this.addMessage('bot', 'Please enter a longer name (at least 2 characters).');
+                            return;
+                        }
+                        this.searchByAuthor(message);
+                        break;
+                    case 'domain':
+                        if (this.domains.includes(message)) {
+                            this.handleDomainSelection(message);
+                        }
+                        break;
+                    default:
+                        if (this.domains.includes(message)) {
+                            this.handleDomainSelection(message);
+                        } else {
+                            this.showServices();
+                        }
+                }
+            },
+
+            fetchLatestArticles: function(isLoadingMore) {
+                var self = this;
+
+                if (!isLoadingMore) {
+                    this.currentPage = 1;
+                    this.addMessage('bot', 'Fetching the latest articles...');
+                }
+
+                fetch('/articles/api/chatbot/articles/latest?page=' + this.currentPage + '&size=' + this.articlesPerPage)
+                    .then(function(response) { return response.json(); })
+                    .then(function(data) {
+                        if (data.articles && data.articles.length > 0) {
+                            self.displayArticles(
+                                data.articles,
+                                isLoadingMore ? 'Here are more recent articles:' : 'Here are the latest articles:',
+                                data.hasMore
+                            );
+                        } else {
+                            if (!isLoadingMore) {
+                                self.addMessage('bot', 'No articles found. Would you like to try another search?');
+                                self.awaitingSearchResponse = true;
+                            } else {
+                                self.addMessage('bot', 'No more articles available. Would you like to try another search?');
+                                self.awaitingSearchResponse = true;
+                            }
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error('Error fetching latest articles:', error);
+                        self.addMessage('bot', 'Sorry, I encountered an error fetching the latest articles.');
+                    });
+            },
+
+            searchByKeywords: function(keywords) {
+                var self = this;
+                fetch('/articles/api/chatbot/articles/search?keywords=' + encodeURIComponent(keywords))
+                    .then(function(response) { return response.json(); })
+                    .then(function(data) {
+                        if (data.articles && data.articles.length > 0) {
+                            self.displayArticles(data.articles, 'Here are articles matching "' + keywords + '":');
+                        } else {
+                            self.addMessage('bot', 'No articles found matching "' + keywords + '". Would you like to try another search?');
+                            self.awaitingSearchResponse = true;
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error('Error searching articles:', error);
+                        self.addMessage('bot', 'Sorry, I encountered an error searching for articles.');
+                    });
+            },
+
+            searchByAuthor: function(authorName, isLoadingMore) {
+                var self = this;
+
+                if (!isLoadingMore) {
+                    this.currentPage = 1;
+                    this.currentAuthor = authorName;
+                    this.addMessage('bot', 'Searching for articles by "' + authorName + '"...');
+                }
+
+                fetch('/articles/api/chatbot/articles/by-author?name=' + encodeURIComponent(authorName) +
+                    '&page=' + this.currentPage + '&size=' + this.articlesPerPage)
+                    .then(function(response) { return response.json(); })
+                    .then(function(data) {
+                        if (data.articles && data.articles.length > 0) {
+                            self.displayArticles(
+                                data.articles,
+                                isLoadingMore ? 'Here are more articles by ' + authorName + ':' :
+                                    'Here are articles by ' + authorName + ':',
+                                data.hasMore
+                            );
+                        } else {
+                            if (!isLoadingMore) {
+                                self.addMessage('bot', 'No articles found by author "' + authorName +
+                                    '". Please select another author or would you like to try another search?');
+                                self.awaitingSearchResponse = true;
+                            } else {
+                                self.addMessage('bot', 'No more articles available by this author. Would you like to try another search?');
+                                self.awaitingSearchResponse = true;
+                            }
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error('Error fetching author articles:', error);
+                        self.addMessage('bot', 'Sorry, I encountered an error searching for articles by this author.');
+                    });
+            },
+
+            handleDomainSelection: function(domain, isLoadingMore) {
+                var self = this;
+                this.currentDomain = domain;
+
+                if (!isLoadingMore) {
+                    this.currentPage = 1;
+                    this.addMessage('bot', 'Searching for articles in ' + domain + '...');
+                }
+
+                fetch('/articles/api/chatbot/articles/by-domain?domain=' + encodeURIComponent(domain) +
+                    '&page=' + this.currentPage + '&size=' + this.articlesPerPage)
+                    .then(function(response) { return response.json(); })
+                    .then(function(data) {
+                        if (data.articles && data.articles.length > 0) {
+                            self.displayArticles(
+                                data.articles,
+                                isLoadingMore ? 'Here are more articles in ' + domain + ':' :
+                                    'Here are articles in ' + domain + ':',
+                                data.hasMore
+                            );
+                        } else {
+                            if (!isLoadingMore) {
+                                self.addMessage('bot', 'No articles found in this domain. Would you like to try another search?');
+                                self.awaitingSearchResponse = true;
+                            } else {
+                                self.addMessage('bot', 'No more articles available. Would you like to try another search?');
+                                self.awaitingSearchResponse = true;
+                            }
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error('Error fetching domain articles:', error);
+                        self.addMessage('bot', 'Sorry, I encountered an error fetching articles.');
+                    });
+            },
+
+            displayArticles: function(articles, introMessage, hasMore) {
+                var self = this;
+                if (articles && articles.length > 0) {
+                    var articlesHtml = '<div class="chatbot-articles">' +
+                        '<p>' + introMessage + '</p>';
+
+                    articles.forEach(function(article) {
+                        articlesHtml +=
+                            '<div class="chatbot-article-card">' +
+                            '<h4>' + article.title + '</h4>' +
+                            '<p>' + article.brief + '</p>' +
+                            '<div class="article-meta">' +
+                            '<span class="article-author">' +
+                            '<i class="fas fa-user"></i> ' + article.author +
+                            '</span>' +
+                            '<span class="article-domain">' +
+                            '<i class="fas fa-folder"></i> ' + article.domain +
+                            '</span>' +
+                            '<a href="/articles/' + article.id + '" class="chatbot-article-link">' +
+                            'Read more <i class="fas fa-arrow-right"></i>' +
+                            '</a>' +
+                            '</div>' +
+                            '</div>';
+                    });
+
+                    articlesHtml += '</div>';
+                    this.addMessage('bot', articlesHtml, true);
+
+                    if (hasMore) {
+                        setTimeout(function() {
+                            self.addMessage('bot', 'Would you like to see more articles?');
+                            self.awaitingMoreArticlesResponse = true;
+                        }, 1000);
+                    } else {
+                        setTimeout(function() {
+                            self.addMessage('bot', 'Would you like to try another search?');
+                            self.awaitingSearchResponse = true;
+                        }, 1000);
+                    }
+                } else {
+                    this.addMessage('bot', 'No articles found. Would you like to try another search?');
+                    this.awaitingSearchResponse = true;
+                }
+            },
+
+            addMessage: function(type, content, isHtml) {
+                var messageDiv = document.createElement('div');
+                messageDiv.className = 'chatbot-message ' + type + '-message';
+
+                if (isHtml) {
+                    messageDiv.innerHTML = content;
+                } else {
+                    messageDiv.textContent = content;
+                }
+
+                this.messagesContainer.appendChild(messageDiv);
+                this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
+            }
+        };
+
+        // Initialize chatbot
+        chatbot.init();
+    });
+</script>
+
+</body>
+</html>

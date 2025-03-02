@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base-layout :: html(content=~{::div})}">
+<body>
+<div class="container my-5">
+    <h2 class="mb-4">
+        <i class="fas fa-chart-line me-2"></i>
+        <span th:text="${#locale.language == 'ar' ? 'لوحة التحكم' : 'Dashboard'}">Dashboard</span>
+    </h2>
+
+    <!-- Tab Navigation -->
+    <ul class="nav nav-tabs mb-4" id="dashboardTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button">
+                <i class="fas fa-home me-2"></i>Overview
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="domains-tab" data-bs-toggle="tab" data-bs-target="#domains" type="button">
+                <i class="fas fa-folder me-2"></i>Articles by Domain
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button">
+                <i class="fas fa-users me-2"></i>User Statistics
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="analytics-tab" data-bs-toggle="tab" data-bs-target="#analytics" type="button">
+                <i class="fas fa-chart-line me-2"></i>Analytics
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="dashboardContent">
+        <!-- Overview Tab -->
+        <div class="tab-pane fade show active" id="overview" role="tabpanel">
+            <!-- Stats Cards Row -->
+            <div class="row g-4" id="statsCards">
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="row g-4 mt-2">
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">Articles Status Overview</h5>
+                            <div style="height: 300px; width: 100%;">
+                                <canvas id="statusChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Update the Domains Tab section -->
+        <div class="tab-pane fade" id="domains" role="tabpanel">
+            <!-- Charts Row -->
+            <div class="row g-4 mb-4">
+                <!-- Bar Chart -->
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">Published Articles by Domain</h5>
+                            <div style="height: 400px; width: 100%;">
+                                <canvas id="domainChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Pie Chart for Top 5 Domains -->
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">Top 5 Domains</h5>
+                            <div style="height: 400px; width: 100%;">
+                                <canvas id="topDomainsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Domain Statistics Table -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="card-title mb-0">Domain Statistics</h5>
+                        <button class="btn btn-sm btn-outline-primary" onclick="refreshDomainStats()">
+                            <i class="fas fa-sync-alt me-2"></i>Refresh
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="domainStatsTable">
+                            <thead>
+                            <tr>
+                                <th>Domain</th>
+                                <th>Total Articles</th>
+                                <th>Published</th>
+                                <th>Pending</th>
+                                <th>Needs Revision</th>
+                                <th>Rejected</th>
+                                <th>Publication Rate</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td colspan="7" class="text-center">Loading...</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Tab -->
+        <div class="tab-pane fade" id="users" role="tabpanel">
+            <!-- Charts Row -->
+            <div class="row g-4 mb-4">
+                <!-- Bar Chart -->
+                <div class="col-md-8">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">Articles by Author</h5>
+                            <div style="height: 300px; width: 100%;">
+                                <canvas id="userArticlesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Pie Chart -->
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">Top 5 Contributors</h5>
+                            <div style="height: 300px; width: 100%;">
+                                <canvas id="topContributorsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Table Card -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="card-title mb-0">Detailed User Statistics</h5>
+                        <button class="btn btn-sm btn-outline-primary" onclick="refreshUserStats()">
+                            <i class="fas fa-sync-alt me-2"></i>Refresh
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="userStatsTable">
+                            <thead>
+                            <tr>
+                                <th>Author</th>
+                                <th>Total Articles</th>
+                                <th>Published</th>
+                                <th>Pending</th>
+                                <th>Needs Revision</th>
+                                <th>Rejected</th>
+                                <th>Publication Rate</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td colspan="7" class="text-center">Loading...</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--  Analytics tab  -->
+        <div class="tab-pane fade" id="analytics" role="tabpanel">
+            <!-- Time Period Selector -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="card-title">Article Analytics</h5>
+                        <div class="d-flex gap-3">
+                            <select id="yearSelect" class="form-select" style="width: 120px;">
+                                <!-- Will be populated dynamically -->
+                            </select>
+
+                            <!-- Period Type Selector -->
+                            <select id="periodSelect" class="form-select" style="width: 200px;">
+                                <option value="full">Full Year</option>
+                                <option value="half1">First Half</option>
+                                <option value="half2">Second Half</option>
+                                <option value="q1">Q1 (Jan-Mar)</option>
+                                <option value="q2">Q2 (Apr-Jun)</option>
+                                <option value="q3">Q3 (Jul-Sep)</option>
+                                <option value="q4">Q4 (Oct-Dec)</option>
+                                <option value="custom">Custom Period</option>
+                            </select>
+
+                            <!-- Custom Period Selectors (initially hidden) -->
+                            <div id="customPeriod" style="display: none;">
+                                <select id="startMonth" class="form-select" style="width: 140px;">
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                                <span class="align-self-center">to</span>
+                                <select id="endMonth" class="form-select" style="width: 140px;">
+                                    <option value="1">January</option>
+                                    <option value="2">February</option>
+                                    <option value="3">March</option>
+                                    <option value="4">April</option>
+                                    <option value="5">May</option>
+                                    <option value="6">June</option>
+                                    <option value="7">July</option>
+                                    <option value="8">August</option>
+                                    <option value="9">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-4">Publication Timeline</h5>
+                                    <div style="height: 300px;">
+                                        <canvas id="timelineChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-4">Monthly Publications</h5>
+                                    <div style="height: 300px;">
+                                        <canvas id="monthlyBarChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-4">Cumulative Growth</h5>
+                                    <div style="height: 300px;">
+                                        <canvas id="growthChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Summary -->
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card bg-primary bg-opacity-10 border-0">
+                        <div class="card-body">
+                            <h6 class="card-title text-muted mb-1">Total Articles</h6>
+                            <h2 class="mb-0" id="totalArticles">-</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize tabs and load initial data
+            const tabElements = document.querySelectorAll('[data-bs-toggle="tab"]');
+            tabElements.forEach(tab => {
+                tab.addEventListener('shown.bs.tab', function(e) {
+                    if (e.target.id === 'domains-tab') {
+                        loadDomainStats();
+                    } else if (e.target.id === 'users-tab') {
+                        loadUserStatistics();
+                    } else if (e.target.id === 'overview-tab') {
+                        loadOverviewStats();
+                    }
+                });
+            });
+
+            // Load initial overview data
+            loadOverviewStats();
+        });
+
+        function loadOverviewStats() {
+            fetch('/articles/api/statistics')
+                .then(response => response.json())
+                .then(data => {
+                    // Load stats cards
+                    const cards = [
+                        {
+                            title: 'Total Articles',
+                            value: data.totalArticles || 0,
+                            color: 'primary',
+                            icon: 'newspaper',
+                            description: 'All articles'
+                        },
+                        {
+                            title: 'Published Articles',
+                            value: data.articlesByStatus?.APPROVED || 0,
+                            color: 'success',
+                            icon: 'check-circle',
+                            description: 'Approved articles'
+                        },
+                        {
+                            title: 'Pending Articles',
+                            value: data.articlesByStatus?.PENDING || 0,
+                            color: 'warning',
+                            icon: 'clock',
+                            description: 'Awaiting review'
+                        },
+                        {
+                            title: 'Needs Revision',
+                            value: data.articlesByStatus?.REVISION_NEEDED || 0,
+                            color: 'info',
+                            icon: 'edit',
+                            description: 'Requires changes'
+                        },
+                        {
+                            title: 'Rejected Articles',
+                            value: data.articlesByStatus?.REJECTED || 0,
+                            color: 'danger',
+                            icon: 'times-circle',
+                            description: 'Not approved'
+                        }
+                    ];
+
+                    // Update the cards layout
+                    document.getElementById('statsCards').innerHTML = `
+                        <div class="row g-4">
+                            ${cards.map(card => `
+                                <div class="col-md-4 col-xl">
+                                    <div class="card bg-${card.color} bg-opacity-10 border-0 shadow-sm">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-${card.icon} fa-2x text-${card.color} me-3"></i>
+                                                <div>
+                                                    <h6 class="card-title mb-1">${card.title}</h6>
+                                                    <h2 class="mb-0">${card.value}</h2>
+                                                    <small class="text-muted">${card.description}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+
+                    // Status chart
+                    const statusLabels = {
+                        'PENDING': 'Pending Review',
+                        'APPROVED': 'Published',
+                        'REJECTED': 'Rejected',
+                        'REVISION_NEEDED': 'Needs Revision'
+                    };
+
+                    new Chart(document.getElementById('statusChart'), {
+                        type: 'doughnut',
+                        data: {
+                            labels: Object.keys(data.articlesByStatus || {}).map(key => statusLabels[key] || key),
+                            datasets: [{
+                                data: Object.values(data.articlesByStatus || {}),
+                                backgroundColor: ['#2196F3', '#FFC107', '#4CAF50', '#F44336']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        padding: 20
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+        }
+
+        // Global chart instances
+        let domainChart, topDomainsChart;
+
+        // Main function to load and display domain statistics
+        async function loadDomainStats() {
+            try {
+                const response = await fetch('/articles/api/statistics');
+                const data = await response.json();
+                const domainStats = data.domainStatistics || {};
+
+                // Process and sort domain data
+                const sortedDomains = processDomainData(domainStats);
+
+                // Update UI components
+                updateDomainTable(sortedDomains);
+                updateCharts(sortedDomains);
+            } catch (error) {
+                console.error('Error loading domain statistics:', error);
+            }
+        }
+
+        // Process and sort domain data
+        function processDomainData(domainStats) {
+            return Object.entries(domainStats)
+                .map(([domain, stats]) => ({
+                    domain,
+                    total: stats.total || 0,
+                    published: stats.APPROVED || 0,
+                    pending: stats.PENDING || 0,
+                    revision: stats.REVISION_NEEDED || 0,
+                    rejected: stats.REJECTED || 0
+                }))
+                .sort((a, b) => b.published - a.published);
+        }
+
+        // Update the domain statistics table
+        function updateDomainTable(domains) {
+            const tbody = document.querySelector('#domainStatsTable tbody');
+            tbody.innerHTML = domains.map(domain => {
+                const publicationRate = domain.total ?
+                    ((domain.published / domain.total) * 100).toFixed(1) : '0.0';
+
+                return `
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-folder fa-lg text-primary me-2"></i>
+                        <span>${domain.domain}</span>
+                    </div>
+                </td>
+                <td>${domain.total}</td>
+                <td><span class="badge bg-success">${domain.published}</span></td>
+                <td><span class="badge bg-warning">${domain.pending}</span></td>
+                <td><span class="badge bg-info">${domain.revision}</span></td>
+                <td><span class="badge bg-danger">${domain.rejected}</span></td>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <div class="progress me-2" style="height: 6px; width: 100px;">
+                            <div class="progress-bar bg-success" style="width: ${publicationRate}%"></div>
+                        </div>
+                        <small class="text-muted">${publicationRate}%</small>
+                    </div>
+                </td>
+            </tr>
+        `;
+            }).join('');
+        }
+
+        // Update both charts
+        function updateCharts(domains) {
+            const colors = ['#4CAF50', '#2196F3', '#FFC107', '#9C27B0', '#FF9800'];
+            const topDomains = domains.slice(0, 5);
+
+            updateBarChart(domains);
+            updatePieChart(topDomains, colors);
+        }
+
+        // Update bar chart
+        function updateBarChart(domains) {
+            if (domainChart) {
+                domainChart.destroy();
+            }
+
+            const ctx = document.getElementById('domainChart');
+            domainChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: domains.map(item => item.domain),
+                    datasets: [{
+                        label: 'Published Articles',
+                        data: domains.map(item => item.published),
+                        backgroundColor: '#4CAF50',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update pie chart
+        function updatePieChart(topDomains, colors) {
+            if (topDomainsChart) {
+                topDomainsChart.destroy();
+            }
+
+            const ctx = document.getElementById('topDomainsChart');
+            topDomainsChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: topDomains.map(item => item.domain),
+                    datasets: [{
+                        data: topDomains.map(item => item.published),
+                        backgroundColor: colors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        function refreshDomainStats() {
+            const tbody = document.querySelector('#domainStatsTable tbody');
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center">Loading...</td></tr>';
+            loadDomainStats();
+        }
+
+        function loadUserStatistics() {
+            fetch('/articles/api/user-statistics')
+                .then(response => response.json())
+                .then(data => {
+                    // Sort data by published articles count
+                    data.sort((a, b) => (b.publishedArticles || 0) - (a.publishedArticles || 0));
+
+                    // Update table
+                    const tbody = document.querySelector('#userStatsTable tbody');
+                    tbody.innerHTML = '';
+
+                    data.forEach(user => {
+                        const publicationRate = user.totalArticles ?
+                            ((user.publishedArticles / user.totalArticles) * 100).toFixed(1) : '0.0';
+
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-user-circle fa-lg text-secondary me-2"></i>
+                                        <span>${user.userName}</span>
+                                    </div>
+                                </td>
+                                <td>${user.totalArticles}</td>
+                                <td>
+                                    <span class="badge bg-success">${user.publishedArticles || 0}</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-warning">${user.pendingArticles || 0}</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">${user.revisionNeededArticles || 0}</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-danger">${user.rejectedArticles || 0}</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="progress me-2" style="height: 6px; width: 100px;">
+                                            <div class="progress-bar bg-success"
+                                                 style="width: ${publicationRate}%">
+                                            </div>
+                                        </div>
+                                        <small class="text-muted">${publicationRate}%</small>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    });
+
+                    // Create user articles chart only approved
+                    // new Chart(document.getElementById('userArticlesChart'), {
+                    //     type: 'bar',
+                    //     data: {
+                    //         labels: data.map(user => user.userName),
+                    //         datasets: [{
+                    //             label: 'Published Articles',
+                    //             data: data.map(user => user.publishedArticles || 0),
+                    //             backgroundColor: '#4CAF50',
+                    //             borderRadius: 4
+                    //         }]
+                    //     },
+                    //     options: {
+                    //         responsive: true,
+                    //         maintainAspectRatio: false,
+                    //         plugins: {
+                    //             legend: {
+                    //                 display: true,
+                    //                 position: 'top'
+                    //             }
+                    //         },
+                    //         scales: {
+                    //             y: {
+                    //                 beginAtZero: true,
+                    //                 ticks: {
+                    //                     stepSize: 1
+                    //                 }
+                    //             }
+                    //         }
+                    //     }
+                    // });
+
+                    // create chart with all status
+                    const barChart = new Chart(document.getElementById('userArticlesChart'), {
+                        type: 'bar',
+                        data: {
+                            labels: data.map(user => user.userName),
+                            datasets: [
+                                {
+                                    label: 'Published',
+                                    data: data.map(user => user.publishedArticles || 0),
+                                    backgroundColor: '#4CAF50'
+                                },
+                                {
+                                    label: 'Pending',
+                                    data: data.map(user => user.pendingArticles || 0),
+                                    backgroundColor: '#FFC107'
+                                },
+                                {
+                                    label: 'Needs Revision',
+                                    data: data.map(user => user.revisionNeededArticles || 0),
+                                    backgroundColor: '#2196F3'
+                                },
+                                {
+                                    label: 'Rejected',
+                                    data: data.map(user => user.rejectedArticles || 0),
+                                    backgroundColor: '#F44336'
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                x: {
+                                    stacked: true
+                                },
+                                y: {
+                                    stacked: true,
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+
+                    // Create top contributors chart
+                    const topContributors = data.slice(0, 5);
+                    new Chart(document.getElementById('topContributorsChart'), {
+                        type: 'pie',
+                        data: {
+                            labels: topContributors.map(user => user.userName),
+                            datasets: [{
+                                data: topContributors.map(user => user.publishedArticles),
+                                backgroundColor: ['#4CAF50', '#2196F3', '#FFC107', '#9C27B0', '#FF9800']
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom'
+                                }
+                            }
+                        }
+                    });
+                });
+        }
+
+        function refreshUserStats() {
+            const tbody = document.querySelector('#userStatsTable tbody');
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center">Loading...</td></tr>';
+            loadUserStatistics();
+        }
+
+        //analytics
+
+        let timelineChart, growthChart;
+
+        function initializeAnalytics() {
+            const yearSelect = document.getElementById('yearSelect');
+            const periodSelect = document.getElementById('periodSelect');
+            const customPeriod = document.getElementById('customPeriod');
+            const startMonth = document.getElementById('startMonth');
+            const endMonth = document.getElementById('endMonth');
+            const currentYear = new Date().getFullYear();
+
+            // Initialize year select
+            for (let year = currentYear; year >= currentYear - 4; year--) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            }
+
+            // Handle period type change
+            periodSelect.addEventListener('change', function(e) {
+
+                const periodType = e.target.value;
+
+                if (periodType === 'custom') {
+                    customPeriod.style.display = 'flex';
+                } else {
+                    customPeriod.style.display = 'none';  // Ensure hiding custom period for non-custom selections
+                }
+                loadAnalytics();
+            });
+
+            // Handle custom period changes
+            startMonth.addEventListener('change', function() {
+                validateAndLoadAnalytics();
+            });
+
+            endMonth.addEventListener('change', function() {
+                validateAndLoadAnalytics();
+            });
+
+            yearSelect.addEventListener('change', loadAnalytics);
+
+            // Initial load
+            loadAnalytics();
+        }
+
+        function validateAndLoadAnalytics() {
+            const startMonth = document.getElementById('startMonth');
+            const endMonth = document.getElementById('endMonth');
+
+            // Ensure end month is not before start month
+            if (parseInt(startMonth.value) > parseInt(endMonth.value)) {
+                endMonth.value = startMonth.value;
+            }
+
+            loadAnalytics();
+        }
+
+        function loadAnalytics() {
+            const year = document.getElementById('yearSelect').value;
+            const periodType = document.getElementById('periodSelect').value;
+            const customPeriod = document.getElementById('customPeriod');
+            let startMonth = 1;
+            let endMonth = 12;
+
+            // Determine date range based on period type
+            if (periodType === 'custom' && customPeriod.style.display !== 'none') {
+                startMonth = parseInt(document.getElementById('startMonth').value);
+                endMonth = parseInt(document.getElementById('endMonth').value);
+            } else {
+                switch (periodType) {
+                    case 'half1':
+                        startMonth = 1;
+                        endMonth = 6;
+                        break;
+                    case 'half2':
+                        startMonth = 7;
+                        endMonth = 12;
+                        break;
+                    case 'q1':
+                        startMonth = 1;
+                        endMonth = 3;
+                        break;
+                    case 'q2':
+                        startMonth = 4;
+                        endMonth = 6;
+                        break;
+                    case 'q3':
+                        startMonth = 7;
+                        endMonth = 9;
+                        break;
+                    case 'q4':
+                        startMonth = 10;
+                        endMonth = 12;
+                        break;
+                    default:
+                        startMonth = 1;
+                        endMonth = 12;
+                        customPeriod.style.display = 'none';
+                }
+            }
+
+            // Reset charts before loading new data
+            if (timelineChart) timelineChart.destroy();
+            if (growthChart) growthChart.destroy();
+            if (monthlyBarChart) monthlyBarChart.destroy();
+
+            // Show loading indicators
+            document.getElementById('timelineChart').innerHTML = '<div class="loading-spinner"></div>';
+            document.getElementById('growthChart').innerHTML = '<div class="loading-spinner"></div>';
+            document.getElementById('monthlyBarChart').innerHTML = '<div class="loading-spinner"></div>';
+            document.getElementById('totalArticles').textContent = '-';
+
+            // Fetch data with selected period
+            fetch(`/articles/api/articles/analytics/period?year=${year}&startMonth=${startMonth}&endMonth=${endMonth}`)
+                .then(response => response.json())
+                .then(data => {
+                    updateTimelineChart(data);
+                    updateGrowthChart(data);
+                    updateMonthlyBarChart(data);
+                    updateStats(data);
+                })
+                .catch(error => {
+                    console.error('Error loading analytics:', error);
+                });
+        }
+
+        let monthlyBarChart;
+
+        // Helper function to sort months chronologically
+        function sortMonthsChronologically(data) {
+            const monthOrder = {
+                'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6,
+                'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12
+            };
+
+            // Convert data object to array of [month, value] pairs and sort
+            return Object.entries(data)
+                .sort((a, b) => monthOrder[a[0]] - monthOrder[b[0]])
+                .reduce((obj, [key, value]) => {
+                    obj[key] = value;
+                    return obj;
+                }, {});
+        }
+
+        function updateMonthlyBarChart(data) {
+            const ctx = document.getElementById('monthlyBarChart').getContext('2d');
+
+            if (monthlyBarChart) {
+                monthlyBarChart.destroy();
+            }
+
+            // Sort the data chronologically
+            const sortedData = sortMonthsChronologically(data.monthlyBreakdown);
+
+            monthlyBarChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(sortedData),
+                    datasets: [{
+                        label: 'Published Articles',
+                        data: Object.values(sortedData),
+                        backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Articles: ${context.parsed.y}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateTimelineChart(data) {
+            const ctx = document.getElementById('timelineChart').getContext('2d');
+
+            if (timelineChart) {
+                timelineChart.destroy();
+            }
+
+            // Sort the data chronologically
+            const sortedData = sortMonthsChronologically(data.monthlyBreakdown);
+
+            timelineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Object.keys(sortedData),
+                    datasets: [{
+                        label: 'Published Articles',
+                        data: Object.values(sortedData),
+                        borderColor: '#4CAF50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateGrowthChart(data) {
+            const ctx = document.getElementById('growthChart').getContext('2d');
+
+            if (growthChart) {
+                growthChart.destroy();
+            }
+
+            // Sort the data chronologically first
+            const sortedData = sortMonthsChronologically(data.monthlyBreakdown);
+
+            // Calculate cumulative growth
+            const cumulativeData = [];
+            let total = 0;
+
+            Object.values(sortedData).forEach(count => {
+                total += count;
+                cumulativeData.push(total);
+            });
+
+            growthChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Object.keys(sortedData),
+                    datasets: [{
+                        label: 'Cumulative Articles',
+                        data: cumulativeData,
+                        borderColor: '#2196F3',
+                        backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateStats(data) {
+            const totalArticles = document.getElementById('totalArticles');
+            animateValue(totalArticles, parseInt(totalArticles.textContent) || 0, data.total || 0, 1000);
+        }
+
+        function animateValue(obj, start, end, duration) {
+            if (start === end) return;
+            const range = end - start;
+            const increment = end > start ? 1 : -1;
+            const stepTime = Math.abs(Math.floor(duration / range));
+            let current = start;
+
+            const timer = setInterval(() => {
+                current += increment;
+                obj.textContent = current;
+                if (current === end) {
+                    clearInterval(timer);
+                }
+            }, stepTime);
+        }
+
+        // Initialize analytics when tab is shown
+        document.addEventListener('DOMContentLoaded', function() {
+            const analyticsTab = document.getElementById('analytics-tab');
+            analyticsTab.addEventListener('shown.bs.tab', function() {
+                if (!timelineChart && !growthChart && !monthlyBarChart) {
+                    initializeAnalytics();
+                }
+            });
+        });
+
+        // // Initialize analytics when tab is shown
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     const analyticsTab = document.getElementById('analytics-tab');
+        //     analyticsTab.addEventListener('shown.bs.tab', function() {
+        //         if (!analyticsChart) {
+        //             initializeAnalytics(1);
+        //         }
+        //     });
+        // });
+
+    //     let trendChart, domainDistChart;
+    //
+    //     function loadAnalytics(monthsPeriod) {
+    //         // Update active button state
+    //         document.querySelectorAll('.time-selector .btn').forEach(btn => {
+    //             btn.classList.toggle('active', btn.dataset.months == monthsPeriod);
+    //         });
+    //
+    //         // Show loading state
+    //         document.getElementById('analyticsCards').innerHTML = `
+    //     <div class="text-center w-100 py-5">
+    //         <div class="spinner-border text-primary" role="status">
+    //             <span class="visually-hidden">Loading...</span>
+    //         </div>
+    //     </div>
+    // `;
+    //
+    //         // Fetch analytics data
+    //         fetch(`/articles/api/articles/analytics?months=${monthsPeriod}`)
+    //             .then(response => response.json())
+    //             .then(data => {
+    //                 updateAnalyticsCards(data, monthsPeriod);
+    //                 updatePublicationTrendChart(data);
+    //                 updateDomainDistributionChart(data);
+    //                 updateAnalysisTable(data, monthsPeriod);
+    //             })
+    //             .catch(error => {
+    //                 console.error('Error loading analytics:', error);
+    //                 showError('Failed to load analytics data');
+    //             });
+    //     }
+    //
+    //     function updateAnalyticsCards(data, monthsPeriod) {
+    //         const cards = [
+    //             {
+    //                 title: 'Total Publications',
+    //                 value: data.totalPublished,
+    //                 color: 'primary',
+    //                 icon: 'newspaper',
+    //                 description: `in last ${monthsPeriod} month${monthsPeriod > 1 ? 's' : ''}`
+    //             },
+    //             {
+    //                 title: 'Monthly Average',
+    //                 value: data.averagePerMonth.toFixed(1),
+    //                 color: 'success',
+    //                 icon: 'chart-bar',
+    //                 description: 'articles per month'
+    //             },
+    //             {
+    //                 title: 'Growth Rate',
+    //                 value: `${data.growthRate.toFixed(1)}%`,
+    //                 color: data.growthRate >= 0 ? 'info' : 'warning',
+    //                 icon: data.growthRate >= 0 ? 'arrow-up' : 'arrow-down',
+    //                 description: 'vs previous period'
+    //             }
+    //         ];
+    //
+    //         document.getElementById('analyticsCards').innerHTML = cards.map(card => `
+    //     <div class="col-md-4">
+    //         <div class="card bg-${card.color} bg-opacity-10 border-0 shadow-sm">
+    //             <div class="card-body">
+    //                 <div class="d-flex align-items-center">
+    //                     <i class="fas fa-${card.icon} fa-2x text-${card.color} me-3"></i>
+    //                     <div>
+    //                         <h6 class="card-title mb-1">${card.title}</h6>
+    //                         <h2 class="mb-0">${card.value}</h2>
+    //                         <small class="text-muted">${card.description}</small>
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     </div>
+    // `).join('');
+    //     }
+    //
+    //     function updatePublicationTrendChart(data) {
+    //         const ctx = document.getElementById('publicationTrendChart').getContext('2d');
+    //
+    //         if (trendChart) {
+    //             trendChart.destroy();
+    //         }
+    //
+    //         const monthlyData = data.monthlyPublications;
+    //         const sortedMonths = Object.keys(monthlyData).sort();
+    //         const values = sortedMonths.map(monthKey => monthlyData[monthKey]);
+    //
+    //         trendChart = new Chart(ctx, {
+    //             type: 'line',
+    //             data: {
+    //                 labels: sortedMonths,
+    //                 datasets: [{
+    //                     label: 'Published Articles',
+    //                     data: values,
+    //                     borderColor: '#2196F3',
+    //                     backgroundColor: 'rgba(33, 150, 243, 0.1)',
+    //                     fill: true,
+    //                     tension: 0.4,
+    //                     pointBackgroundColor: '#2196F3',
+    //                     pointRadius: 4,
+    //                     pointHoverRadius: 6
+    //                 }]
+    //             },
+    //             options: {
+    //                 responsive: true,
+    //                 maintainAspectRatio: false,
+    //                 plugins: {
+    //                     legend: {
+    //                         display: false
+    //                     },
+    //                     tooltip: {
+    //                         mode: 'index',
+    //                         intersect: false,
+    //                         callbacks: {
+    //                             label: function(context) {
+    //                                 return `Articles: ${context.raw}`;
+    //                             }
+    //                         }
+    //                     }
+    //                 },
+    //                 scales: {
+    //                     y: {
+    //                         beginAtZero: true,
+    //                         ticks: {
+    //                             stepSize: 1
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         });
+    //     }
+    //
+    //     function updateDomainDistributionChart(data) {
+    //         const ctx = document.getElementById('domainDistChart').getContext('2d');
+    //
+    //         if (domainDistChart) {
+    //             domainDistChart.destroy();
+    //         }
+    //
+    //         const domainKeys = Object.keys(data.domainDistribution);
+    //         const domainValues = Object.values(data.domainDistribution);
+    //         const chartColors = ['#4CAF50', '#2196F3', '#FFC107', '#9C27B0', '#FF9800', '#F44336'];
+    //
+    //         domainDistChart = new Chart(ctx, {
+    //             type: 'doughnut',
+    //             data: {
+    //                 labels: domainKeys,
+    //                 datasets: [{
+    //                     data: domainValues,
+    //                     backgroundColor: chartColors.slice(0, domainKeys.length),
+    //                     borderWidth: 0
+    //                 }]
+    //             },
+    //             options: {
+    //                 responsive: true,
+    //                 maintainAspectRatio: false,
+    //                 plugins: {
+    //                     legend: {
+    //                         position: 'bottom',
+    //                         labels: {
+    //                             padding: 20,
+    //                             usePointStyle: true
+    //                         }
+    //                     }
+    //                 },
+    //                 cutout: '60%'
+    //             }
+    //         });
+    //     }
+    //
+    //     function updateAnalysisTable(data, monthsPeriod) {
+    //         const tbody = document.querySelector('#analysisTable tbody');
+    //         const monthlyData = data.monthlyPublications;
+    //         const sortedMonths = Object.keys(monthlyData).sort();
+    //
+    //         tbody.innerHTML = sortedMonths.map((monthKey, index) => {
+    //             const currentCount = monthlyData[monthKey] || 0;
+    //             const previousMonth = sortedMonths[index - 1];
+    //             const previousCount = previousMonth ? (monthlyData[previousMonth] || 0) : 0;
+    //             const monthlyGrowth = previousCount === 0 ? 100 :
+    //                 ((currentCount - previousCount) / previousCount) * 100;
+    //
+    //             return `
+    //         <tr>
+    //             <td>${formatMonth(monthKey)}</td>
+    //             <td>${currentCount}</td>
+    //             <td>
+    //                 ${getDomainForMonth(data.domainDistribution)}
+    //             </td>
+    //             <td>
+    //                 <span class="trend-indicator ${monthlyGrowth >= 0 ? 'positive' : 'negative'}">
+    //                     <i class="fas fa-${monthlyGrowth >= 0 ? 'arrow-up' : 'arrow-down'} me-1"></i>
+    //                     ${Math.abs(monthlyGrowth).toFixed(1)}%
+    //                 </span>
+    //             </td>
+    //             <td>
+    //                 ${getTrendIndicator(monthlyGrowth)}
+    //             </td>
+    //         </tr>
+    //     `;
+    //         }).join('');
+    //     }
+    //
+    //     // Helper functions
+    //     function formatMonth(monthStr) {
+    //         return new Date(monthStr + '-01').toLocaleDateString('en-US', {
+    //             year: 'numeric',
+    //             month: 'short'
+    //         });
+    //     }
+    //
+    //     function getDomainForMonth(domainData) {
+    //         const topDomain = Object.entries(domainData)
+    //             .sort((a, b) => b[1] - a[1])[0];
+    //         return topDomain ? `<span class="badge bg-primary">${topDomain[0]}</span>` : '-';
+    //     }
+    //
+    //     function getTrendIndicator(growth) {
+    //         if (growth > 10) {
+    //             return '<i class="fas fa-arrow-trend-up text-success"></i> Strong Growth';
+    //         } else if (growth > 0) {
+    //             return '<i class="fas fa-arrow-trend-up text-info"></i> Stable Growth';
+    //         } else if (growth > -10) {
+    //             return '<i class="fas fa-minus text-warning"></i> Slight Decline';
+    //         } else {
+    //             return '<i class="fas fa-arrow-trend-down text-danger"></i> Significant Drop';
+    //         }
+    //     }
+    //
+    //     function showError(message) {
+    //         document.getElementById('analyticsCards').innerHTML = `
+    //     <div class="col-12">
+    //         <div class="alert alert-danger">
+    //             ${message}
+    //         </div>
+    //     </div>
+    // `;
+    //     }
+    //
+    //     // Initialize analytics when tab is shown
+    //     document.addEventListener('DOMContentLoaded', function() {
+    //         const analyticsTab = document.getElementById('analytics-tab');
+    //         analyticsTab.addEventListener('shown.bs.tab', function() {
+    //             loadAnalytics(1); // Load 1-month view by default
+    //         });
+    //     });
+    </script>
+
+    <style>
+        /* Card Styles */
+        .card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+        }
+        .card-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #6c757d;
+        }
+
+        /* Tab Styles */
+        .nav-tabs .nav-link {
+            color: #6c757d;
+            border: none;
+            padding: 1rem 1.5rem;
+            transition: all 0.2s ease;
+        }
+        .nav-tabs .nav-link.active {
+            color: var(--bs-primary);
+            border-bottom: 2px solid var(--bs-primary);
+            background: none;
+        }
+        .nav-tabs .nav-link:hover:not(.active) {
+            border: none;
+            color: var(--bs-primary);
+        }
+
+        /* Progress Bar */
+        .progress {
+            background-color: #e9ecef;
+            border-radius: 3px;
+        }
+
+        /* Badge Styles */
+        .badge {
+            font-weight: 500;
+            padding: 0.5em 0.8em;
+        }
+
+        /* Table Styles */
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .table td {
+            vertical-align: middle;
+        }
+
+        /* Loading Spinner */
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            min-height: 300px;
+        }
+
+        /* Button Styles */
+        .btn-outline-primary {
+            transition: all 0.2s ease;
+        }
+        .btn-outline-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Layout Styles */
+        #dashboardRoot {
+            min-height: 600px;
+        }
+        .card-body {
+            position: relative;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .nav-tabs .nav-link {
+                padding: 0.75rem 1rem;
+            }
+
+            .card-body {
+                padding: 1rem;
+            }
+
+            .table-responsive {
+                margin: 0 -1rem;
+            }
+
+            .progress {
+                width: 60px !important;
+            }
+        }
+
+        /* RTL Support */
+        [dir="rtl"] .me-2 {
+            margin-left: 0.5rem !important;
+            margin-right: 0 !important;
+        }
+        [dir="rtl"] .me-3 {
+            margin-left: 1rem !important;
+            margin-right: 0 !important;
+        }
+        [dir="rtl"] .progress {
+            margin-left: 0.5rem !important;
+            margin-right: 0 !important;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Dark Mode Support */
+        @media (prefers-color-scheme: dark) {
+            .table th {
+                background-color: rgba(255,255,255,0.05);
+            }
+
+            .progress {
+                background-color: rgba(255,255,255,0.1);
+            }
+
+            .card {
+                background-color: rgba(255,255,255,0.02);
+            }
+        }
+
+
+             /* Analytics specific styles */
+         .time-selector .btn {
+             padding: 0.5rem 1rem;
+             font-weight: 500;
+             transition: all 0.2s ease;
+         }
+
+        .time-selector .btn.active {
+            background-color: var(--bs-primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        #analyticsCards .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #analyticsCards .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .trend-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+
+        .trend-indicator.positive {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+        }
+
+        .trend-indicator.negative {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: #F44336;
+        }
+
+        .chart-container {
+            position: relative;
+            min-height: 300px;
+        }
+
+        @media (max-width: 768px) {
+            .time-selector {
+                flex-wrap: wrap;
+            }
+            .time-selector .btn {
+                flex: 1;
+                min-width: 50%;
+            }
+        }
+
+
+        #customPeriod {
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem;
+            background-color: var(--background-secondary);
+            border-radius: 0.5rem;
+        }
+
+        #customPeriod.show {
+            display: flex;
+        }
+
+        #customPeriod select {
+            min-width: 140px;
+        }
+
+        #customPeriod span {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #customPeriod {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            #customPeriod select {
+                width: 100%;
+            }
+        }
+    </style>
+</div>
+</body>
+</html>

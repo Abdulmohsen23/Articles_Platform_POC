@@ -1,0 +1,152 @@
+/*!* Global Styles *!*/
+/*:root {*/
+/*    --primary-color: #007bff;*/
+/*    --secondary-color: #6c757d;*/
+/*    --success-color: #28a745;*/
+/*    --danger-color: #dc3545;*/
+/*    --background-color: #f8f9fa;*/
+/*}*/
+
+/*body {*/
+/*    background-color: var(--background-color);*/
+/*    min-height: 100vh;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*}*/
+
+/*!* RTL Support *!*/
+/*[dir="rtl"] .ms-auto {*/
+/*    margin-left: 0 !important;*/
+/*    margin-right: auto !important;*/
+/*}*/
+
+/*!* Navigation *!*/
+/*.navbar {*/
+/*    box-shadow: 0 2px 4px rgba(0,0,0,0.1);*/
+/*}*/
+
+/*.navbar-brand {*/
+/*    font-weight: bold;*/
+/*}*/
+
+/*!* Main Content *!*/
+/*main {*/
+/*    flex: 1;*/
+/*    padding: 2rem 0;*/
+/*}*/
+
+/*!* Card Styles *!*/
+/*.card {*/
+/*    border: none;*/
+/*    transition: transform 0.2s, box-shadow 0.2s;*/
+/*}*/
+
+/*.card:hover {*/
+/*    transform: translateY(-5px);*/
+/*    box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;*/
+/*}*/
+
+/*!* Form Styles *!*/
+/*.form-control:focus {*/
+/*    border-color: var(--primary-color);*/
+/*    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);*/
+/*}*/
+
+/*.btn-primary {*/
+/*    background-color: var(--primary-color);*/
+/*    border-color: var(--primary-color);*/
+/*    transition: all 0.3s ease;*/
+/*}*/
+
+/*.btn-primary:hover {*/
+/*    transform: translateY(-2px);*/
+/*    box-shadow: 0 4px 10px rgba(0,123,255,0.3);*/
+/*}*/
+
+/*!* Alert Styles *!*/
+/*.alert {*/
+/*    border: none;*/
+/*    border-radius: 8px;*/
+/*    box-shadow: 0 2px 4px rgba(0,0,0,0.05);*/
+/*}*/
+
+/*!* Footer *!*/
+/*footer {*/
+/*    background-color: #343a40;*/
+/*    color: white;*/
+/*    padding: 2rem 0;*/
+/*    margin-top: auto;*/
+/*}*/
+
+/*!* Responsive Adjustments *!*/
+/*@media (max-width: 768px) {*/
+/*    .container {*/
+/*        padding-left: 1rem;*/
+/*        padding-right: 1rem;*/
+/*    }*/
+
+/*    .card {*/
+/*        margin: 1rem;*/
+/*    }*/
+/*}*/
+
+/*!* Animation Classes *!*/
+/*.fade-in {*/
+/*    animation: fadeIn 0.5s ease-in;*/
+/*}*/
+
+/*@keyframes fadeIn {*/
+/*    from {*/
+/*        opacity: 0;*/
+/*        transform: translateY(20px);*/
+/*    }*/
+/*    to {*/
+/*        opacity: 1;*/
+/*        transform: translateY(0);*/
+/*    }*/
+/*}*/
+
+/*!* Form Validation Styles *!*/
+/*.was-validated .form-control:valid {*/
+/*    border-color: var(--success-color);*/
+/*}*/
+
+/*.was-validated .form-control:invalid {*/
+/*    border-color: var(--danger-color);*/
+/*}*/
+
+/*!* Password Toggle Button *!*/
+/*.input-group .btn-outline-secondary {*/
+/*    border-color: #ced4da;*/
+/*}*/
+
+/*.input-group .btn-outline-secondary:hover {*/
+/*    background-color: #f8f9fa;*/
+/*}*/
+
+/*!* Language Toggle Button *!*/
+/*.btn-outline-light:hover {*/
+/*    transform: translateY(-2px);*/
+/*    box-shadow: 0 4px 10px rgba(255,255,255,0.1);*/
+/*}*/
+
+/*!* Add these to your existing CSS *!*/
+/*[dir="rtl"] .ms-auto {*/
+/*    margin-right: auto !important;*/
+/*    margin-left: 0 !important;*/
+/*}*/
+
+/*[dir="rtl"] .me-2 {*/
+/*    margin-left: 0.5rem !important;*/
+/*    margin-right: 0 !important;*/
+/*}*/
+
+/*[dir="rtl"] .navbar-brand img {*/
+/*    margin-left: 10px;*/
+/*    margin-right: 0;*/
+/*}*/
+
+/*[dir="rtl"] .footer-social a {*/
+/*    margin-left: 1rem;*/
+/*    margin-right: 0;*/
+/*}*/

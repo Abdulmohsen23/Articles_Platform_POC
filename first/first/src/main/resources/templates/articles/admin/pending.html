@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base-layout :: html(content=~{::div})}">
+<body>
+<div class="container">
+  <h2 class="mb-4" th:text="${#locale.language == 'ar' ? 'المقالات المعلقة' : 'Pending Articles'}">Pending Articles</h2>
+  <!-- Layout Toggle -->
+  <div class="d-flex justify-content-end mb-3">
+    <div class="btn-group">
+      <button class="btn btn-outline-primary active" data-layout="table">
+        <i class="fas fa-list"></i>
+        <span class="ms-1"></span>
+      </button>
+      <button class="btn btn-outline-primary" data-layout="grid">
+        <i class="fas fa-th-large"></i>
+        <span class="ms-1"></span>
+      </button>
+    </div>
+  </div>
+  <!-- Alert Messages -->
+  <div th:if="${successMessage}" class="alert alert-success">
+    <span th:text="${successMessage}"></span>
+  </div>
+  <div th:if="${errorMessage}" class="alert alert-danger">
+    <span th:text="${errorMessage}"></span>
+  </div>
+
+  <!-- No Pending Articles Message -->
+  <div th:if="${#lists.isEmpty(articles)}" class="alert alert-info table-container">
+
+    <span th:text="${#locale.language == 'ar' ? 'لا توجد مقالات معلقة' : 'No Pending Articles'}">No Pending Articles</span>
+  </div>
+
+  <!-- Pending Articles List -->
+  <div th:if="${!#lists.isEmpty(articles)}" class="row">
+    <div class="col-12">
+      <div class="table-container"> <!-- Add this wrapper -->
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead class="table-dark">
+          <tr>
+            <th th:text="${#locale.language == 'ar' ? 'الصورة' : 'Cover'}">Cover</th>
+            <th th:text="${#locale.language == 'ar' ? 'عنوان المقال' : 'Article Title'}">Article Title</th>
+            <th th:text="${#locale.language == 'ar' ? 'الكاتب' : 'Author'}">Author</th>
+            <th th:text="${#locale.language == 'ar' ? 'المجال' : 'Domain'}">Domain</th>
+            <th th:text="${#locale.language == 'ar' ? 'تاريخ التقديم' : 'Submission Date'}">Submission Date</th>
+            <th th:text="${#locale.language == 'ar' ? 'الإجراءات' : 'Actions'}">Actions</th>
+            <th th:text="${#locale.language == 'ar' ? 'تعديل المقال' : 'Editing'}">Editing Article</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="article : ${articles}">
+            <td>
+              <img th:if="${article.coverImagePath}"
+                   th:src="${article.coverImagePath}"
+                   class="img-thumbnail"
+                   style="max-height: 50px;"
+                   alt="Cover Image">
+            </td>
+            <td>
+              <a href="#"
+                 th:text="${article.title}"
+                 onclick="loadArticleDetails(this)"
+                 th:data-article-id="${article.id}"
+                 data-bs-toggle="modal"
+                 data-bs-target="#reviewModal">
+              </a>
+            </td>
+            <td th:text="${article.author.name}"></td>
+            <td th:text="${article.domain}"></td>
+            <td th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+            <td>
+              <button type="button"
+                      class="btn btn-sm btn-primary"
+                      onclick="loadArticleDetails(this)"
+                      th:data-article-id="${article.id}"
+                      data-bs-toggle="modal"
+                      data-bs-target="#reviewModal">
+                <i class="fas fa-check-circle"></i>
+                <span th:text="${#locale.language == 'ar' ? 'مراجعة' : 'Review'}">Review</span>
+              </button>
+            </td>
+            <td>
+              <a class="nav-link" th:href="@{/articles/edit/{id}(id=${article.id})}"
+                 th:text="${#locale.language == 'ar' ? ' تعديل' : 'EDIT'}">EDIT
+              </a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid Layout -->
+  <div id="gridView" class="row g-4" style="display: none;" th:if="${!#lists.isEmpty(articles)}">
+    <div th:each="article : ${articles}" class="col-md-6 col-lg-4">
+      <div class="card h-100">
+        <!-- Card Image -->
+        <div class="card-img-wrapper">
+          <img th:if="${article.coverImagePath}"
+               th:src="${article.coverImagePath}"
+               class="card-img-top"
+               alt="Article cover">
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body">
+          <h5 class="card-title">
+            <a href="#"
+               th:text="${article.title}"
+               onclick="loadArticleDetails(this)"
+               th:data-article-id="${article.id}"
+               data-bs-toggle="modal"
+               data-bs-target="#reviewModal"
+               class="text-decoration-none">Article Title</a>
+          </h5>
+
+          <div class="author-info mb-2">
+            <i class="fas fa-user me-2"></i>
+            <span th:text="${article.author.name}">Author Name</span>
+          </div>
+
+          <div class="domain-badge mb-2">
+            <span class="badge bg-primary" th:text="${article.domain}">Domain</span>
+          </div>
+
+          <p class="card-text text-muted">
+            <i class="far fa-clock me-2"></i>
+            <span th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')}">Submission Date</span>
+          </p>
+        </div>
+
+        <!-- Card Footer -->
+        <div class="card-footer bg-transparent">
+          <div class="d-flex justify-content-between align-items-center">
+            <button type="button"
+                    class="btn btn-sm btn-primary"
+                    onclick="loadArticleDetails(this)"
+                    th:data-article-id="${article.id}"
+                    data-bs-toggle="modal"
+                    data-bs-target="#reviewModal">
+              <i class="fas fa-check-circle me-1"></i>
+              <span th:text="${#locale.language == 'ar' ? 'مراجعة' : 'Review'}">Review</span>
+            </button>
+
+            <a class="btn btn-sm btn-outline-secondary"
+               th:href="@{/articles/edit/{id}(id=${article.id})}">
+              <i class="fas fa-edit me-1"></i>
+              <span th:text="${#locale.language == 'ar' ? 'تعديل' : 'Edit'}">Edit</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <nav th:if="${totalPages > 1}" class="mt-4">
+    <ul class="pagination justify-content-center">
+      <!-- Previous Page -->
+      <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+        <a class="page-link" th:href="@{/articles/admin/pending(page=${currentPage - 1})}"
+           th:text="${#locale.language == 'ar' ? 'السابق' : 'Previous'}">
+          Previous
+        </a>
+      </li>
+
+      <!-- Page Numbers -->
+      <li class="page-item"
+          th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+          th:classappend="${pageNum == currentPage ? 'active' : ''}">
+        <a class="page-link"
+           th:href="@{/articles/admin/pending(page=${pageNum})}"
+           th:text="${pageNum + 1}">1</a>
+      </li>
+
+      <!-- Next Page -->
+      <li class="page-item" th:classappend="${currentPage == totalPages - 1 ? 'disabled' : ''}">
+        <a class="page-link" th:href="@{/articles/admin/pending(page=${currentPage + 1})}"
+           th:text="${#locale.language == 'ar' ? 'التالي' : 'Next'}">
+          Next
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Enhanced Review Modal -->
+  <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" th:text="${#locale.language == 'ar' ? 'مراجعة المقال' : 'Article Review'}">Article Review</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <!-- Article Details Section -->
+            <div class="col-md-8">
+              <div class="article-details">
+                <!-- Add Cover Image Here -->
+                <div class="cover-image mb-4">
+                  <img id="modalArticleCover"
+                       class="img-fluid rounded w-100"
+                       style="max-height: 300px; object-fit: cover; display: none;"
+                       alt="Article Cover">
+                </div>
+
+                <h3 id="modalArticleTitle"></h3>
+                <div class="metadata mb-3">
+                  <span class="badge bg-secondary me-2" id="modalArticleDomain"></span>
+                  <span class="text-muted" id="modalArticleDate"></span>
+                </div>
+                <div class="mb-3">
+                  <h5 th:text="${#locale.language == 'ar' ? 'ملخص:' : 'Brief:'}">Brief:</h5>
+                  <p id="modalArticleBrief"></p>
+                </div>
+                <div>
+                  <h5 th:text="${#locale.language == 'ar' ? 'المحتوى:' : 'Content:'}">Content:</h5>
+                  <div id="modalArticleContent"></div>
+                </div>
+                <div class="mb-3">
+                <h5 th:text="${#locale.language == 'ar' ? 'الملف المرفق:' : 'Attachment:'}">Attachment:</h5>
+                <div id="modalArticleFile" class="file-info">
+                  <div class="attachment-card">
+                    <div class="attachment-icon" id="modalFileIcon">
+                      <!-- Icon will be set via JavaScript -->
+                    </div>
+                    <div class="attachment-details">
+                      <div class="attachment-name" id="modalFileName"></div>
+                      <div class="attachment-meta">
+                        <span id="modalFileSize" class="file-size"></span>
+                        <span class="file-type" id="modalFileType"></span>
+                      </div>
+                    </div>
+                    <a id="modalFileDownload" href="#" class="attachment-download" download>
+                      <i class="fas fa-download"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+
+            <!-- Review Form Section -->
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body">
+                  <form id="reviewForm" method="post">
+                    <div class="mb-3">
+                      <label class="form-label" th:text="${#locale.language == 'ar' ? 'القرار:' : 'Decision:'}">Decision:</label>
+                      <select class="form-select" name="status" required>
+                        <option value="" selected disabled th:text="${#locale.language == 'ar' ? 'اختر القرار' : 'Select Decision'}">Select Decision</option>
+                        <option value="APPROVED" th:text="${#locale.language == 'ar' ? 'قبول' : 'Approve'}">Approve</option>
+                        <option value="REJECTED" th:text="${#locale.language == 'ar' ? 'رفض' : 'Reject'}">Reject</option>
+                        <option value="REVISION_NEEDED" th:text="${#locale.language == 'ar' ? 'يحتاج تعديل' : 'Needs Revision'}">Needs Revision</option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label" th:text="${#locale.language == 'ar' ? 'التعليقات:' : 'Comments:'}">Comments:</label>
+                      <textarea class="form-control"
+                                name="comments"
+                                rows="5"
+                                th:placeholder="${#locale.language == 'ar' ? 'أضف تعليقاتك هنا...' : 'Add your feedback here...'}"></textarea>
+                    </div>
+                    <div class="d-grid gap-2">
+                      <button type="submit" class="btn btn-primary" th:text="${#locale.language == 'ar' ? 'إرسال المراجعة' : 'Submit Review'}">
+                        Submit Review
+                      </button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="${#locale.language == 'ar' ? 'إلغاء' : 'Cancel'}">
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript for handling the modal -->
+  <script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check for first visit
+      const isFirstVisit = !sessionStorage.getItem('visitedPending');
+
+      // Layout toggle functionality
+      const layoutButtons = document.querySelectorAll('[data-layout]');
+      const tableView = document.querySelector('.table-container').parentElement.parentElement;
+      const gridView = document.getElementById('gridView');
+
+      // Load saved layout preference
+      const savedLayout = localStorage.getItem('pendingArticlesLayout') || 'table';
+
+      function animateContent(container) {
+        if (!isFirstVisit) return;
+
+        const items = container.querySelectorAll(savedLayout === 'grid' ? '.card' : 'tbody tr');
+        items.forEach((item, index) => {
+          item.style.animation = 'none';
+          item.offsetHeight; // Trigger reflow
+          item.style.animation = savedLayout === 'grid'
+                  ? `fadeInUp 0.5s ease forwards ${0.4 + (index * 0.1)}s`
+                  : `slideInRight 0.5s ease forwards ${0.4 + (index * 0.1)}s`;
+        });
+      }
+
+      function setLayout(layout) {
+        // Update buttons
+        layoutButtons.forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.layout === layout);
+        });
+
+        // Fade out current view
+        const currentView = layout === 'grid' ? tableView : gridView;
+        const newView = layout === 'grid' ? gridView : tableView;
+
+        currentView.style.opacity = '0';
+        currentView.style.transform = 'translateY(-10px)';
+
+        setTimeout(() => {
+          currentView.style.display = 'none';
+          newView.style.display = layout === 'grid' ? 'flex' : 'block';
+
+          // Trigger reflow
+          newView.offsetHeight;
+
+          // Animate new view
+          newView.style.opacity = '1';
+          newView.style.transform = 'translateY(0)';
+
+          // Animate content
+          animateContent(newView);
+        }, 300);
+
+        localStorage.setItem('pendingArticlesLayout', layout);
+      }
+
+      // Initialize layout
+      if (!isFirstVisit) {
+        // Reset animations on subsequent visits
+        document.querySelectorAll('.articles-header, .layout-toggle, .alert, .table-container, .pagination, .card').forEach(el => {
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+          el.style.animation = 'none';
+        });
+      }
+
+      setLayout(savedLayout);
+
+      // Add click handlers
+      layoutButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const layout = this.dataset.layout;
+          setLayout(layout);
+        });
+      });
+
+      // File handling utilities
+      function getFileIcon(fileName) {
+        const extension = fileName.split('.').pop().toLowerCase();
+        switch (extension) {
+          case 'pdf': return '<i class="fas fa-file-pdf"></i>';
+          case 'doc':
+          case 'docx': return '<i class="fas fa-file-word"></i>';
+          case 'xls':
+          case 'xlsx': return '<i class="fas fa-file-excel"></i>';
+          case 'jpg':
+          case 'jpeg':
+          case 'png':
+          case 'gif': return '<i class="fas fa-file-image"></i>';
+          case 'zip':
+          case 'rar': return '<i class="fas fa-file-archive"></i>';
+          case 'txt': return '<i class="fas fa-file-alt"></i>';
+          default: return '<i class="fas fa-file"></i>';
+        }
+      }
+
+      function getFileIconClass(fileName) {
+        const extension = fileName.split('.').pop().toLowerCase();
+        switch (extension) {
+          case 'pdf': return 'pdf';
+          case 'doc':
+          case 'docx': return 'word';
+          case 'xls':
+          case 'xlsx': return 'excel';
+          case 'jpg':
+          case 'jpeg':
+          case 'png':
+          case 'gif': return 'image';
+          case 'zip':
+          case 'rar': return 'archive';
+          case 'txt': return 'text';
+          default: return '';
+        }
+      }
+
+      function formatFileSize(bytes) {
+        if (!bytes) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+      }
+
+      // Modal functionality
+      window.loadArticleDetails = function(element) {
+        const articleId = element.getAttribute('data-article-id');
+        const modal = document.getElementById('reviewModal');
+
+        // Reset and show loading state
+        document.getElementById('modalArticleTitle').textContent = 'Loading...';
+        document.getElementById('modalArticleContent').innerHTML = `
+                <div class="loading-animation">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>`;
+
+        // Set form action
+        document.getElementById('reviewForm').action = '/articles/admin/review/' + articleId;
+
+        // Fetch article details
+        fetch(`/articles/api/${articleId}`)
+                .then(response => {
+                  if (!response.ok) throw new Error('Network response was not ok');
+                  return response.json();
+                })
+                .then(article => {
+                  console.log('Article data:', article);
+                  updateModalContent(article);
+                })
+                .catch(error => {
+                  console.error('Error:', error);
+                  document.getElementById('modalArticleContent').innerHTML =
+                          `<div class="alert alert-danger">Error loading article content: ${error.message}</div>`;
+                });
+      }
+
+      function updateModalContent(article) {
+        // Handle cover image with animation
+        const coverImage = document.getElementById('modalArticleCover');
+        if (article.coverImagePath) {
+          coverImage.style.opacity = '0';
+          coverImage.src = article.coverImagePath;
+          coverImage.style.display = 'block';
+          setTimeout(() => coverImage.style.opacity = '1', 100);
+        } else {
+          coverImage.style.display = 'none';
+        }
+
+        // Animate content updates
+        const elements = [
+          { id: 'modalArticleTitle', content: article.title || 'No Title' },
+          { id: 'modalArticleDomain', content: article.domain || 'No Domain' },
+          { id: 'modalArticleDate', content: article.createdAt ? new Date(article.createdAt).toLocaleString() : 'No Date' },
+          { id: 'modalArticleBrief', content: article.brief || 'No Brief' },
+          { id: 'modalArticleContent', content: article.content || 'No Content', isHTML: true }
+        ];
+
+        elements.forEach((el, index) => {
+          const element = document.getElementById(el.id);
+          element.style.opacity = '0';
+          setTimeout(() => {
+            if (el.isHTML) {
+              element.innerHTML = el.content;
+            } else {
+              element.textContent = el.content;
+            }
+            element.style.transition = 'opacity 0.3s ease';
+            element.style.opacity = '1';
+          }, 100 * (index + 1));
+        });
+
+        // Handle file attachment with animation
+        const fileInfo = document.getElementById('modalArticleFile');
+        if (article.fileName) {
+          fileInfo.style.opacity = '0';
+
+          const iconContainer = document.getElementById('modalFileIcon');
+          iconContainer.innerHTML = getFileIcon(article.fileName);
+          iconContainer.className = 'attachment-icon ' + getFileIconClass(article.fileName);
+
+          document.getElementById('modalFileName').textContent = article.fileName;
+          document.getElementById('modalFileSize').textContent = formatFileSize(article.fileSize);
+          document.getElementById('modalFileType').textContent = article.fileName.split('.').pop().toUpperCase();
+          document.getElementById('modalFileDownload').href = article.filePath;
+
+          fileInfo.style.display = 'block';
+          setTimeout(() => {
+            fileInfo.style.transition = 'opacity 0.3s ease';
+            fileInfo.style.opacity = '1';
+          }, 300);
+        } else {
+          fileInfo.style.display = 'none';
+        }
+      }
+
+      // Review form handling
+      const reviewForm = document.getElementById('reviewForm');
+      if (reviewForm) {
+        reviewForm.addEventListener('submit', function(e) {
+          const submitButton = this.querySelector('[type="submit"]');
+          if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.innerHTML = `
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span>Processing...</span>
+                    `;
+          }
+        });
+      }
+
+      // Mark as visited
+      sessionStorage.setItem('visitedPending', 'true');
+    });
+  </script>
+
+  <style>
+
+    /* Add these animations to your existing style section */
+
+    /* Header Animations */
+    .articles-header {
+      opacity: 0;
+      animation: fadeInDown 0.6s ease forwards;
+    }
+
+    /* Layout Toggle Animation */
+    .layout-toggle {
+      opacity: 0;
+      transform: translateY(-10px);
+      animation: fadeInUp 0.5s ease forwards;
+      animation-delay: 0.2s;
+    }
+
+    /* Alert Messages Animation */
+    .alert {
+      opacity: 0;
+      transform: translateY(-10px);
+      animation: fadeInDown 0.5s ease forwards;
+    }
+
+    /* Table Animations */
+    .table-container {
+      opacity: 0;
+      animation: fadeIn 0.6s ease forwards;
+      animation-delay: 0.3s;
+    }
+
+    .table tbody tr {
+      opacity: 0;
+      transform: translateX(-20px);
+      animation: slideInRight 0.5s ease forwards;
+    }
+
+    /* Staggered row animations */
+    .table tbody tr:nth-child(1) { animation-delay: 0.4s; }
+    .table tbody tr:nth-child(2) { animation-delay: 0.5s; }
+    .table tbody tr:nth-child(3) { animation-delay: 0.6s; }
+    .table tbody tr:nth-child(4) { animation-delay: 0.7s; }
+    .table tbody tr:nth-child(5) { animation-delay: 0.8s; }
+
+    /* Grid Card Animations */
+    #gridView .card {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    /* Staggered card animations */
+    #gridView .card:nth-child(1) { animation-delay: 0.4s; }
+    #gridView .card:nth-child(2) { animation-delay: 0.5s; }
+    #gridView .card:nth-child(3) { animation-delay: 0.6s; }
+    #gridView .card:nth-child(4) { animation-delay: 0.7s; }
+    #gridView .card:nth-child(5) { animation-delay: 0.8s; }
+
+    /* Modal Animations */
+    .modal.fade .modal-dialog {
+      transform: scale(0.95);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .modal.show .modal-dialog {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    /* Modal Content Animations */
+    .modal.show .cover-image {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideInUp 0.5s ease forwards;
+      animation-delay: 0.2s;
+    }
+
+    .modal.show .article-details h3 {
+      opacity: 0;
+      animation: fadeIn 0.5s ease forwards;
+      animation-delay: 0.3s;
+    }
+
+    .modal.show .metadata {
+      opacity: 0;
+      animation: fadeIn 0.5s ease forwards;
+      animation-delay: 0.4s;
+    }
+
+    .modal.show .article-content {
+      opacity: 0;
+      animation: fadeIn 0.5s ease forwards;
+      animation-delay: 0.5s;
+    }
+
+    /* Review Form Animations */
+    .modal.show .card {
+      opacity: 0;
+      transform: translateX(20px);
+      animation: slideInLeft 0.5s ease forwards;
+      animation-delay: 0.4s;
+    }
+
+    /* Pagination Animation */
+    .pagination {
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeInUp 0.5s ease forwards;
+      animation-delay: 0.9s;
+    }
+
+    /* Empty State Animation */
+    .alert.alert-info {
+      opacity: 0;
+      transform: scale(0.95);
+      animation: scaleIn 0.5s ease forwards;
+      animation-delay: 0.3s;
+    }
+
+    /* Animation Keyframes */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* RTL Animation Support */
+    [dir="rtl"] .table tbody tr {
+      transform: translateX(20px);
+    }
+
+    [dir="rtl"] .modal.show .card {
+      transform: translateX(-20px);
+    }
+
+    .file-info {
+      background: var(--background-secondary);
+      padding: 0.75rem;
+      border-radius: 4px;
+    }
+    /* RTL support for pagination */
+    [dir="rtl"] .pagination {
+      padding-right: 0;
+    }
+
+    [dir="rtl"] .page-item:first-child .page-link {
+      border-radius: 0 0.25rem 0.25rem 0;
+    }
+
+    [dir="rtl"] .page-item:last-child .page-link {
+      border-radius: 0.25rem 0 0 0.25rem;
+    }
+
+    .pagination {
+      margin-bottom: 1rem;
+    }
+
+    .page-link {
+      color: var(--accent-color);
+    }
+
+    .page-item.active .page-link {
+      background-color: blue;
+      border-color: var(--accent-color);
+    }
+
+    /* Card Layout Styles */
+    .card-img-wrapper {
+      position: relative;
+      height: 200px;
+      overflow: hidden;
+    }
+
+    .card-img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .card-title {
+      line-height: 1.4;
+      margin-bottom: 1rem;
+    }
+
+    .card-title a {
+      color: var(--text-primary);
+    }
+
+    .card-title a:hover {
+      color: var(--primary-color);
+    }
+
+    /* Layout Toggle Buttons */
+    [data-layout] {
+      padding: 0.5rem 1rem;
+    }
+
+    [data-layout].active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    /* RTL Support for Cards */
+    [dir="rtl"] .me-2 {
+      margin-left: 0.5rem !important;
+      margin-right: 0 !important;
+    }
+
+    [dir="rtl"] .card-footer .btn-group {
+      flex-direction: row-reverse;
+    }
+
+    /* Table Container */
+    .table-container {
+      transition: opacity 0.3s ease;
+    }
+
+    /* Add these styles to your existing style tag */
+
+    /* Modal Content Styles */
+    .modal-body .preview-content,
+    #modalArticleContent {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    #modalArticleContent img {
+      max-width: 100% !important;
+      height: auto !important;
+      display: block;
+      margin: 1rem 0;
+    }
+
+    /* If any tables in content */
+    #modalArticleContent table {
+      max-width: 100%;
+      overflow-x: auto;
+      display: block;
+    }
+
+    /* Ensure proper modal sizing */
+    .modal-dialog.modal-xl {
+      max-width: 1140px;
+      margin: 1.75rem auto;
+    }
+
+    .modal-content {
+      max-width: 100%;
+    }
+
+    .article-details {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    /* File Attachment Styles */
+    .attachment-card {
+      display: flex;
+      align-items: center;
+      background: var(--background-secondary);
+      border-radius: 8px;
+      padding: 1rem;
+      gap: 1rem;
+    }
+
+    .attachment-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      font-size: 1.5rem;
+    }
+
+    .attachment-icon.pdf {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .attachment-icon.word {
+      background-color: #0d6efd;
+      color: white;
+    }
+
+    .attachment-icon.excel {
+      background-color: #198754;
+      color: white;
+    }
+
+    .attachment-icon.image {
+      background-color: #6f42c1;
+      color: white;
+    }
+
+    .attachment-icon.archive {
+      background-color: #fd7e14;
+      color: white;
+    }
+
+    .attachment-icon.text {
+      background-color: #6c757d;
+      color: white;
+    }
+
+    .attachment-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .attachment-name {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .attachment-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .attachment-download {
+      padding: 0.5rem;
+      border-radius: 6px;
+      color: var(--text-primary);
+      transition: all 0.2s ease;
+    }
+
+    .attachment-download:hover {
+      background-color: var(--background-primary);
+      color: var(--primary-color);
+    }
+
+    .file-type {
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+  </style>
+</div>
+</body>
+</html>

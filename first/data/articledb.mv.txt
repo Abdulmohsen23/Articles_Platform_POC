@@ -1,0 +1,576 @@
+File D:/Downloads/first/data/articledb.mv.db, 376832 bytes, 0 MB
+00000 fileHeader H:2,block:3,blockSize:1000,chunk:dfa,clean:1,created:1945a04b75b,format:3,version:dfa,fletcher:df013d07
+01000 fileHeader H:2,block:3,blockSize:1000,chunk:dfa,clean:1,created:1945a04b75b,format:3,version:dfa,fletcher:df013d07
+
+02000 chunkHeader chunk:df9,block:2,len:1,pages:b,max:ea0,map:2df,next:3,root:37e4000023994,time:487232be,version:df9,toc:cb5
++000ad node, map 245, 19 entries, 200 bytes, maxLen 100
+    3 children @ chunk df7 +04188
+    2 children @ chunk df7 +042aa
+    5 children @ chunk df7 +04377
+    5 children @ chunk df7 +0457d
+    5 children @ chunk df7 +04756
+    5 children @ chunk df7 +04987
+    3 children @ chunk df7 +04bd2
+    3 children @ chunk df7 +04e0e
+    2 children @ chunk df7 +0a5a6
+    2 children @ chunk df7 +0c6f4
+    2 children @ chunk df7 +10374
+    2 children @ chunk df7 +1295c
+    1 children @ chunk df7 +14c51
+    1 children @ chunk df7 +163f4
+    2 children @ chunk df7 +19941
+    1 children @ chunk df7 +1b4c2
+    2 children @ chunk df7 +1b5e8
+    1 children @ chunk df7 +21b04
+    4 children @ chunk df9 +00175
++00175 leaf, map 245, 4 entries, 455 bytes, maxLen 200
++0033c node, map 246, 2 entries, 31 bytes, maxLen 20
+    24 children @ chunk df7 +25c60
+    27 children @ chunk df9 +0035b
++0035b leaf, map 246, 27 entries, 66 bytes, maxLen 60
++0039d node, map 249, 2 entries, 31 bytes, maxLen 20
+    26 children @ chunk df9 +003bc
+    25 children @ chunk df7 +25cbb
++003bc leaf, map 249, 26 entries, 64 bytes, maxLen 40
++003fc node, map b, 2 entries, 29 bytes, maxLen 20
+    13 children @ chunk df7 +25d16
+    37 children @ chunk df9 +00419
++00419 leaf, map b, 37 entries, 1076 bytes, maxLen 600
++0084d node, map f, 2 entries, 31 bytes, maxLen 20
+    13 children @ chunk df7 +25e03
+    37 children @ chunk df9 +0086c
++0086c leaf, map f, 37 entries, 122 bytes, maxLen 80
++008e6 leaf, map 0, 15 entries, 975 bytes, maxLen 400
+    chunk.df1 = chunk:df1,block:77,len:28,pages:2f,livePages:1,max:30c40,liveMax:400,map:2db,root:37c40009c6f94,time:486e2b17,unusedAtVersion:df6,version:df1,toc:274e4,occupancy:ffffffffff3f
+    chunk.df6 = chunk:df6,block:4,len:1,pages:3,livePages:1,max:1020,liveMax:c00,map:2dd,next:5,root:37d8000026e94,time:4870c5c7,unusedAtVersion:df6,version:df6,toc:d86,occupancy:05
+    chunk.df7 = chunk:df7,block:35,len:27,pages:29,livePages:22,max:2f9c0,liveMax:2ec40,map:2dd,next:d,root:37dc0009896d6,time:4870c5d3,unusedAtVersion:df7,version:df7,toc:266d6,occupancy:000400a0a201
+    chunk.df8 = chunk:df8,block:5,len:2,pages:c,livePages:1,max:14a0,liveMax:600,map:2df,next:7,root:37e0000035294,time:4871e512,unusedAtVersion:df8,version:df8,toc:1127,occupancy:ff0b
+    meta.id = 1
+    root.1 = 37e0000024896
+    root.2 = 37dc000002b49
+    root.245 = 37e4000002b4d
+    root.246 = 37e400000cf01
+    root.249 = 37e400000e741
+    root.5 = 37dc0000ef941
+    root.b = 37e400000ff01
+    root.d = 37dc000975bc6
+    root.e = 37dc000976fc2
+    root.f = 37e4000021341
+map 0: 975 bytes, 31%
+map b: 1105 bytes, 35%
+map f: 153 bytes, 4%
+map 245: 655 bytes, 21%
+map 246: 97 bytes, 3%
+map 249: 95 bytes, 3%
++00f80 chunkFooter chunk:df9,len:1,version:df9,fletcher:87a44b59
+
+03000 chunkHeader chunk:dfa,block:3,len:1,pages:7,max:9e0,map:2df,next:7,root:37e800000ff16,time:4872b48b,version:dfa,toc:87d
++000ad node, map 245, 19 entries, 200 bytes, maxLen 100
+    3 children @ chunk df7 +04188
+    2 children @ chunk df7 +042aa
+    5 children @ chunk df7 +04377
+    5 children @ chunk df7 +0457d
+    5 children @ chunk df7 +04756
+    5 children @ chunk df7 +04987
+    3 children @ chunk df7 +04bd2
+    3 children @ chunk df7 +04e0e
+    2 children @ chunk df7 +0a5a6
+    2 children @ chunk df7 +0c6f4
+    2 children @ chunk df7 +10374
+    2 children @ chunk df7 +1295c
+    1 children @ chunk df7 +14c51
+    1 children @ chunk df7 +163f4
+    2 children @ chunk df7 +19941
+    1 children @ chunk df7 +1b4c2
+    2 children @ chunk df7 +1b5e8
+    1 children @ chunk df7 +21b04
+    4 children @ chunk dfa +00175
++00175 leaf, map 245, 4 entries, 455 bytes, maxLen 200
++0033c node, map 246, 2 entries, 31 bytes, maxLen 20
+    24 children @ chunk df7 +25c60
+    27 children @ chunk dfa +0035b
++0035b leaf, map 246, 27 entries, 66 bytes, maxLen 60
++0039d node, map 249, 2 entries, 31 bytes, maxLen 20
+    26 children @ chunk dfa +003bc
+    25 children @ chunk df7 +25cbb
++003bc leaf, map 249, 26 entries, 64 bytes, maxLen 40
++003fc leaf, map 0, 16 entries, 1153 bytes, maxLen 600
+    chunk.df1 = chunk:df1,block:77,len:28,pages:2f,livePages:1,max:30c40,liveMax:400,map:2db,root:37c40009c6f94,time:486e2b17,unusedAtVersion:df6,version:df1,toc:274e4,occupancy:ffffffffff3f
+    chunk.df6 = chunk:df6,block:4,len:1,pages:3,livePages:1,max:1020,liveMax:c00,map:2dd,next:5,root:37d8000026e94,time:4870c5c7,unusedAtVersion:df6,version:df6,toc:d86,occupancy:05
+    chunk.df7 = chunk:df7,block:35,len:27,pages:29,livePages:22,max:2f9c0,liveMax:2ec40,map:2dd,next:d,root:37dc0009896d6,time:4870c5d3,unusedAtVersion:df7,version:df7,toc:266d6,occupancy:000400a0a201
+    chunk.df8 = chunk:df8,block:5,len:2,pages:c,livePages:1,max:14a0,liveMax:600,map:2df,next:7,root:37e0000035294,time:4871e512,unusedAtVersion:df8,version:df8,toc:1127,occupancy:ff0b
+    chunk.df9 = chunk:df9,block:2,len:1,pages:b,livePages:4,max:ea0,liveMax:6c0,map:2df,next:3,root:37e4000023994,time:487232be,unusedAtVersion:df9,version:df9,toc:cb5,occupancy:3f04
+    meta.id = 1
+    root.1 = 37e0000024896
+    root.2 = 37dc000002b49
+    root.245 = 37e8000002b4d
+    root.246 = 37e800000cf01
+    root.249 = 37e800000e741
+    root.5 = 37dc0000ef941
+    root.b = 37e400000ff01
+    root.d = 37dc000975bc6
+    root.e = 37dc000976fc2
+    root.f = 37e4000021341
+map 0: 1153 bytes, 57%
+map 245: 655 bytes, 32%
+map 246: 97 bytes, 4%
+map 249: 95 bytes, 4%
++00f80 chunkFooter chunk:dfa,len:1,version:dfa,fletcher:3fa69b59
+
+04000 chunkHeader chunk:df6,block:4,len:1,pages:3,max:1020,map:2dd,next:5,root:37d8000026e94,time:4870c5c7,version:df6,toc:d86
++000ad node, map 5, 2 entries, 29 bytes, maxLen 20
+    12 children @ chunk df6 +000ca
+    7 children @ chunk df1 +044f2
++000ca leaf, map 5, 12 entries, 2288 bytes, maxLen c00
++009ba leaf, map 0, 15 entries, 972 bytes, maxLen 400
+    chunk.df1 = chunk:df1,block:4f,len:28,pages:2f,livePages:21,max:30c40,liveMax:27020,map:2db,next:77,root:37c40009c6f94,time:486e2b17,unusedAtVersion:df4,version:df1,toc:274e4,occupancy:000b00d0ae34
+    chunk.df3 = chunk:df3,block:2d,len:1,pages:2,livePages:1,max:c00,liveMax:600,map:2dd,next:2e,root:37cc000013556,time:486e39d4,unusedAtVersion:df3,version:df3,toc:980,occupancy:02
+    chunk.df4 = chunk:df4,block:2e,len:7,pages:7,livePages:1,max:87c0,liveMax:8000,map:2dd,next:35,root:37d000019d356,time:486e9068,unusedAtVersion:df4,version:df4,toc:6caa,occupancy:7d
+    chunk.df5 = chunk:df5,block:2,len:2,pages:d,livePages:a,max:1ac0,liveMax:aa0,map:2dd,next:4,root:37d4000048bd4,time:486f1950,unusedAtVersion:df5,version:df5,toc:1547,occupancy:0310
+    meta.id = 1
+    root.1 = 37cc000002b56
+    root.2 = 37c4000002b49
+    root.245 = 37d4000026e8d
+    root.246 = 37d4000031ec1
+    root.249 = 37d4000033701
+    root.5 = 37d8000002b41
+    root.b = 37d4000034ec1
+    root.d = 37c40009b1606
+    root.e = 37c40009b2a02
+    root.f = 37d40000464c1
+map 0: 972 bytes, 29%
+map 5: 2317 bytes, 70%
++00f80 chunkFooter chunk:df6,len:1,version:df6,fletcher:66a44559
+
+05000 chunkHeader chunk:df8,block:5,len:2,pages:c,max:14a0,map:2df,next:7,root:37e0000035294,time:4871e512,version:df8,toc:1127
++000ad node, map 245, 19 entries, 200 bytes, maxLen 100
+    3 children @ chunk df7 +04188
+    2 children @ chunk df7 +042aa
+    5 children @ chunk df7 +04377
+    5 children @ chunk df7 +0457d
+    5 children @ chunk df7 +04756
+    5 children @ chunk df7 +04987
+    3 children @ chunk df7 +04bd2
+    3 children @ chunk df7 +04e0e
+    2 children @ chunk df7 +0a5a6
+    2 children @ chunk df7 +0c6f4
+    2 children @ chunk df7 +10374
+    2 children @ chunk df7 +1295c
+    1 children @ chunk df7 +14c51
+    1 children @ chunk df7 +163f4
+    2 children @ chunk df7 +19941
+    1 children @ chunk df7 +1b4c2
+    2 children @ chunk df7 +1b5e8
+    1 children @ chunk df7 +21b04
+    4 children @ chunk df8 +00175
++00175 leaf, map 245, 4 entries, 505 bytes, maxLen 200
++0036e node, map 246, 2 entries, 31 bytes, maxLen 20
+    24 children @ chunk df7 +25c60
+    27 children @ chunk df8 +0038d
++0038d leaf, map 246, 27 entries, 66 bytes, maxLen 60
++003cf node, map 249, 2 entries, 31 bytes, maxLen 20
+    26 children @ chunk df8 +003ee
+    25 children @ chunk df7 +25cbb
++003ee leaf, map 249, 26 entries, 64 bytes, maxLen 40
++0042e node, map b, 2 entries, 29 bytes, maxLen 20
+    13 children @ chunk df7 +25d16
+    38 children @ chunk df8 +0044b
++0044b leaf, map b, 38 entries, 1083 bytes, maxLen 600
++00886 node, map f, 2 entries, 31 bytes, maxLen 20
+    13 children @ chunk df7 +25e03
+    38 children @ chunk df8 +008a5
++008a5 leaf, map f, 38 entries, 125 bytes, maxLen 80
++00922 leaf, map 1, 32 entries, 1064 bytes, maxLen 600
++00d4a leaf, map 0, 15 entries, 989 bytes, maxLen 400
+    chunk.df1 = chunk:df1,block:77,len:28,pages:2f,livePages:1,max:30c40,liveMax:400,map:2db,root:37c40009c6f94,time:486e2b17,unusedAtVersion:df6,version:df1,toc:274e4,occupancy:ffffffffff3f
+    chunk.df5 = chunk:df5,block:2,len:2,pages:d,livePages:0,max:1ac0,liveMax:0,map:2dd,next:4,root:37d4000048bd4,time:486f1950,unused:4871e513,unusedAtVersion:df7,version:df5,toc:1547,occupancy:ff1f
+    chunk.df6 = chunk:df6,block:4,len:1,pages:3,livePages:1,max:1020,liveMax:c00,map:2dd,next:5,root:37d8000026e94,time:4870c5c7,unusedAtVersion:df6,version:df6,toc:d86,occupancy:05
+    chunk.df7 = chunk:df7,block:35,len:27,pages:29,livePages:22,max:2f9c0,liveMax:2ec40,map:2dd,next:d,root:37dc0009896d6,time:4870c5d3,unusedAtVersion:df7,version:df7,toc:266d6,occupancy:000400a0a201
+    meta.id = 1
+    root.1 = 37e0000024896
+    root.2 = 37dc000002b49
+    root.245 = 37e0000002b4d
+    root.246 = 37e000000db81
+    root.249 = 37e000000f3c1
+    root.5 = 37dc0000ef941
+    root.b = 37e0000010b81
+    root.d = 37dc000975bc6
+    root.e = 37dc000976fc2
+    root.f = 37e0000022181
+map 0: 989 bytes, 23%
+map 1: 1064 bytes, 25%
+map b: 1112 bytes, 26%
+map f: 156 bytes, 3%
+map 245: 705 bytes, 16%
+map 246: 97 bytes, 2%
+map 249: 95 bytes, 2%
++01f80 chunkFooter chunk:df8,len:2,version:df8,fletcher:83a44a59
+
+07000 chunkHeader chunk:dfa,block:7,len:1,pages:b,max:10a0,map:2df,next:8,root:37e8000023996,time:487116ce,version:dfa,toc:e2f
++000ad node, map 245, 19 entries, 200 bytes, maxLen 100
+    3 children @ chunk df7 +04188
+    2 children @ chunk df7 +042aa
+    5 children @ chunk df7 +04377
+    5 children @ chunk df7 +0457d
+    5 children @ chunk df7 +04756
+    5 children @ chunk df7 +04987
+    3 children @ chunk df7 +04bd2
+    3 children @ chunk df7 +04e0e
+    2 children @ chunk df7 +0a5a6
+    2 children @ chunk df7 +0c6f4
+    2 children @ chunk df7 +10374
+    2 children @ chunk df7 +1295c
+    1 children @ chunk df7 +14c51
+    1 children @ chunk df7 +163f4
+    2 children @ chunk df7 +19941
+    1 children @ chunk df7 +1b4c2
+    2 children @ chunk df7 +1b5e8
+    1 children @ chunk df7 +21b04
+    4 children @ chunk dfa +00175
++00175 leaf, map 245, 4 entries, 455 bytes, maxLen 200
++0033c node, map 246, 2 entries, 31 bytes, maxLen 20
+    24 children @ chunk df7 +25c60
+    27 children @ chunk dfa +0035b
++0035b leaf, map 246, 27 entries, 66 bytes, maxLen 60
++0039d node, map 249, 2 entries, 31 bytes, maxLen 20
+    26 children @ chunk dfa +003bc
+    25 children @ chunk df7 +25cbb
++003bc leaf, map 249, 26 entries, 64 bytes, maxLen 40
++003fc node, map b, 2 entries, 29 bytes, maxLen 20
+    13 children @ chunk df7 +25d16
+    37 children @ chunk dfa +00419
++00419 leaf, map b, 37 entries, 1076 bytes, maxLen 600
++0084d node, map f, 2 entries, 31 bytes, maxLen 20
+    13 children @ chunk df7 +25e03
+    37 children @ chunk dfa +0086c
++0086c leaf, map f, 37 entries, 122 bytes, maxLen 80
++008e6 leaf, map 0, 17 entries, 1353 bytes, maxLen 600
+    chunk.df1 = chunk:df1,block:d,len:28,pages:2f,livePages:1,max:30c40,liveMax:400,map:2db,root:37c40009c6f94,time:486e2b17,unusedAtVersion:df6,version:df1,toc:274e4,occupancy:ffffffffff3f
+    chunk.df5 = chunk:df5,block:2,len:2,pages:d,livePages:0,max:1ac0,liveMax:0,map:2dd,next:4,root:37d4000048bd4,time:486f1950,unused:4870d40e,unusedAtVersion:df8,version:df5,toc:1547,occupancy:ff1f
+    chunk.df6 = chunk:df6,block:4,len:1,pages:3,livePages:1,max:1020,liveMax:c00,map:2dd,next:5,root:37d8000026e94,time:4870c5c7,unusedAtVersion:df6,version:df6,toc:d86,occupancy:05
+    chunk.df7 = chunk:df7,block:35,len:27,pages:29,livePages:22,max:2f9c0,liveMax:2ec40,map:2dd,root:37dc0009896d6,time:4870c5d3,unusedAtVersion:df8,version:df7,toc:266d6,occupancy:000400a0a201
+    chunk.df8 = chunk:df8,block:5c,len:1,pages:1,livePages:0,max:600,liveMax:0,map:2dd,next:5d,root:37e0000002b56,time:4870c5d7,unused:4870d40e,unusedAtVersion:df8,version:df8,toc:5e4,occupancy:01
+    chunk.df9 = chunk:df9,block:5,len:2,pages:c,livePages:1,max:16a0,liveMax:600,map:2df,next:7,root:37e4000035296,time:4870d40d,unusedAtVersion:df9,version:df9,toc:11df,occupancy:ff0b
+    meta.id = 1
+    root.1 = 37e4000024896
+    root.2 = 37dc000002b49
+    root.245 = 37e8000002b4d
+    root.246 = 37e800000cf01
+    root.249 = 37e800000e741
+    root.5 = 37dc0000ef941
+    root.b = 37e800000ff01
+    root.d = 37dc000975bc6
+    root.e = 37dc000976fc2
+    root.f = 37e8000021341
+map 0: 1353 bytes, 39%
+map b: 1105 bytes, 31%
+map f: 153 bytes, 4%
+map 245: 655 bytes, 18%
+map 246: 97 bytes, 2%
+map 249: 95 bytes, 2%
++00f80 chunkFooter chunk:dfa,len:1,version:dfa,fletcher:3fa69b59
+
+08000 chunkHeader chunk:dfb,block:8,len:1,pages:7,max:9e0,map:2df,next:9,root:37ec00000ff16,time:487159de,version:dfb,toc:9f8
++000ad node, map 245, 19 entries, 200 bytes, maxLen 100
+    3 children @ chunk df7 +04188
+    2 children @ chunk df7 +042aa
+    5 children @ chunk df7 +04377
+    5 children @ chunk df7 +0457d
+    5 children @ chunk df7 +04756
+    5 children @ chunk df7 +04987
+    3 children @ chunk df7 +04bd2
+    3 children @ chunk df7 +04e0e
+    2 children @ chunk df7 +0a5a6
+    2 children @ chunk df7 +0c6f4
+    2 children @ chunk df7 +10374
+    2 children @ chunk df7 +1295c
+    1 children @ chunk df7 +14c51
+    1 children @ chunk df7 +163f4
+    2 children @ chunk df7 +19941
+    1 children @ chunk df7 +1b4c2
+    2 children @ chunk df7 +1b5e8
+    1 children @ chunk df7 +21b04
+    4 children @ chunk dfb +00175
++00175 leaf, map 245, 4 entries, 455 bytes, maxLen 200
++0033c node, map 246, 2 entries, 31 bytes, maxLen 20
+    24 children @ chunk df7 +25c60
+    27 children @ chunk dfb +0035b
++0035b leaf, map 246, 27 entries, 66 bytes, maxLen 60
++0039d node, map 249, 2 entries, 31 bytes, maxLen 20
+    26 children @ chunk dfb +003bc
+    25 children @ chunk df7 +25cbb
++003bc leaf, map 249, 26 entries, 64 bytes, maxLen 40
++003fc leaf, map 0, 18 entries, 1532 bytes, maxLen 600
+    chunk.df1 = chunk:df1,block:d,len:28,pages:2f,livePages:1,max:30c40,liveMax:400,map:2db,root:37c40009c6f94,time:486e2b17,unusedAtVersion:df6,version:df1,toc:274e4,occupancy:ffffffffff3f
+    chunk.df5 = chunk:df5,block:2,len:2,pages:d,livePages:0,max:1ac0,liveMax:0,map:2dd,next:4,root:37d4000048bd4,time:486f1950,unused:4870d40e,unusedAtVersion:df8,version:df5,toc:1547,occupancy:ff1f
+    chunk.df6 = chunk:df6,block:4,len:1,pages:3,livePages:1,max:1020,liveMax:c00,map:2dd,next:5,root:37d8000026e94,time:4870c5c7,unusedAtVersion:df6,version:df6,toc:d86,occupancy:05
+    chunk.df7 = chunk:df7,block:35,len:27,pages:29,livePages:22,max:2f9c0,liveMax:2ec40,map:2dd,root:37dc0009896d6,time:4870c5d3,unusedAtVersion:df8,version:df7,toc:266d6,occupancy:000400a0a201
+    chunk.df8 = chunk:df8,block:5c,len:1,pages:1,livePages:0,max:600,liveMax:0,map:2dd,next:5d,root:37e0000002b56,time:4870c5d7,unused:4870d40e,unusedAtVersion:df8,version:df8,toc:5e4,occupancy:01
+    chunk.df9 = chunk:df9,block:5,len:2,pages:c,livePages:1,max:16a0,liveMax:600,map:2df,next:7,root:37e4000035296,time:4870d40d,unusedAtVersion:df9,version:df9,toc:11df,occupancy:ff0b
+    chunk.dfa = chunk:dfa,block:7,len:1,pages:b,livePages:4,max:10a0,liveMax:6c0,map:2df,next:8,root:37e8000023996,time:487116ce,unusedAtVersion:dfa,version:dfa,toc:e2f,occupancy:3f04
+    meta.id = 1
+    root.1 = 37e4000024896
+    root.2 = 37dc000002b49
+    root.245 = 37ec000002b4d
+    root.246 = 37ec00000cf01
+    root.249 = 37ec00000e741
+    root.5 = 37dc0000ef941
+    root.b = 37e800000ff01
+    root.d = 37dc000975bc6
+    root.e = 37dc000976fc2
+    root.f = 37e8000021341
+map 0: 1532 bytes, 64%
+map 245: 655 bytes, 27%
+map 246: 97 bytes, 4%
+map 249: 95 bytes, 3%
++00f80 chunkFooter chunk:dfb,len:1,version:dfb,fletcher:4aa69d59
+
+0d000 chunkHeader chunk:df1,block:d,len:28,pages:2f,max:30c40,map:2db,next:77,root:37c40009c6f94,time:486e2b17,version:df1,toc:274e4
++000ad node, map 2, 7 entries, 126 bytes, maxLen 80
+    30 children @ chunk df1 +0012b
+    26 children @ chunk df1 +006ba
+    27 children @ chunk df1 +00bd7
+    26 children @ chunk df1 +01145
+    34 children @ chunk df1 +01761
+    31 children @ chunk df1 +02150
+    46 children @ chunk df1 +02bc7
++0012b leaf, map 2, 30 entries, 1423 bytes, maxLen 600
++006ba leaf, map 2, 26 entries, 1309 bytes, maxLen 600
++00bd7 leaf, map 2, 27 entries, 1390 bytes, maxLen 600
++01145 leaf, map 2, 26 entries, 1564 bytes, maxLen 800
++01761 leaf, map 2, 34 entries, 2543 bytes, maxLen c00
++02150 leaf, map 2, 31 entries, 2679 bytes, maxLen c00
++02bc7 leaf, map 2, 46 entries, 4126 bytes, maxLen 1800
++03be5 node, map 5, 2 entries, 29 bytes, maxLen 20
+    12 children @ chunk df1 +03c02
+    7 children @ chunk df1 +044f2
++03c02 leaf, map 5, 12 entries, 2288 bytes, maxLen c00
++044f2 leaf, map 5, 7 entries, 1214 bytes, maxLen 600
++049b0 node, map 245, 19 entries, 200 bytes, maxLen 100
+    3 children @ chunk df1 +04a78
+    2 children @ chunk df1 +04b9a
+    5 children @ chunk df1 +04c67
+    5 children @ chunk df1 +04e6d
+    5 children @ chunk df1 +05046
+    5 children @ chunk df1 +05277
+    3 children @ chunk df1 +054c2
+    3 children @ chunk df1 +056fe
+    2 children @ chunk df1 +0ae96
+    2 children @ chunk df1 +0cfe4
+    2 children @ chunk df1 +10c64
+    2 children @ chunk df1 +1324c
+    1 children @ chunk df1 +15541
+    1 children @ chunk df1 +16ce4
+    2 children @ chunk df1 +1a231
+    1 children @ chunk df1 +1bdb2
+    2 children @ chunk df1 +1bed8
+    1 children @ chunk df1 +223f4
+    3 children @ chunk df1 +26531
++04a78 leaf, map 245, 3 entries, 290 bytes, maxLen 180
++04b9a leaf, map 245, 2 entries, 205 bytes, maxLen 100
++04c67 leaf, map 245, 5 entries, 518 bytes, maxLen 300
++04e6d leaf, map 245, 5 entries, 473 bytes, maxLen 200
++05046 leaf, map 245, 5 entries, 561 bytes, maxLen 300
++05277 leaf, map 245, 5 entries, 587 bytes, maxLen 300
++054c2 leaf, map 245, 3 entries, 572 bytes, maxLen 300
++056fe leaf, map 245, 3 entries, 22424 bytes, maxLen 6000
++0ae96 leaf, map 245, 2 entries, 8526 bytes, maxLen 3000
++0cfe4 leaf, map 245, 2 entries, 15488 bytes, maxLen 4000
++10c64 leaf, map 245, 2 entries, 9704 bytes, maxLen 3000
++1324c leaf, map 245, 2 entries, 8949 bytes, maxLen 3000
++15541 leaf, map 245, 1 entries, 6051 bytes, maxLen 1800
++16ce4 leaf, map 245, 1 entries, 13645 bytes, maxLen 4000
++1a231 leaf, map 245, 2 entries, 7041 bytes, maxLen 2000
++1bdb2 leaf, map 245, 1 entries, 294 bytes, maxLen 180
++1bed8 leaf, map 245, 2 entries, 25884 bytes, maxLen 8000
++223f4 leaf, map 245, 1 entries, 16701 bytes, maxLen 6000
++26531 leaf, map 245, 3 entries, 327 bytes, maxLen 180
++26678 node, map 246, 2 entries, 31 bytes, maxLen 20
+    24 children @ chunk df1 +26697
+    26 children @ chunk df1 +266d3
++26697 leaf, map 246, 24 entries, 60 bytes, maxLen 40
++266d3 leaf, map 246, 26 entries, 64 bytes, maxLen 40
++26713 node, map 249, 2 entries, 31 bytes, maxLen 20
+    25 children @ chunk df1 +26732
+    25 children @ chunk df1 +26770
++26732 leaf, map 249, 25 entries, 62 bytes, maxLen 40
++26770 leaf, map 249, 25 entries, 62 bytes, maxLen 40
++267ae node, map b, 2 entries, 29 bytes, maxLen 20
+    13 children @ chunk df1 +267cb
+    37 children @ chunk df1 +26824
++267cb leaf, map b, 13 entries, 89 bytes, maxLen 60
++26824 leaf, map b, 37 entries, 1076 bytes, maxLen 600
++26c58 leaf, map d, 2 entries, 80 bytes, maxLen 60
++26ca8 leaf, map e, 2 entries, 37 bytes, maxLen 30
++26ccd node, map f, 2 entries, 31 bytes, maxLen 20
+    13 children @ chunk df1 +26cec
+    37 children @ chunk df1 +26d1c
++26cec leaf, map f, 13 entries, 48 bytes, maxLen 30
++26d1c leaf, map f, 37 entries, 122 bytes, maxLen 80
++26d96 leaf, map 1, 32 entries, 1064 bytes, maxLen 600
++271be leaf, map 0, 14 entries, 806 bytes, maxLen 400
+    chunk.dec = chunk:dec,block:2,len:8,pages:c,livePages:0,max:8e00,liveMax:0,map:2db,root:37b00001b5f94,time:486e2b0d,unused:486e2b17,unusedAtVersion:df0,version:dec,toc:715e,occupancy:ff0f
+    chunk.dee = chunk:dee,block:a,len:21,pages:29,livePages:0,max:283c0,liveMax:0,map:2db,root:37b8000818bd4,time:486e2b12,unused:486e2b17,unusedAtVersion:df0,version:dee,toc:20949,occupancy:ffffffffff01
+    chunk.df0 = chunk:df0,block:2b,len:1,pages:1,livePages:0,max:600,liveMax:0,map:2db,root:37c0000002b56,time:486e2b15,unused:486e2b17,unusedAtVersion:df0,version:df0,toc:53b,occupancy:01
+    meta.id = 1
+    root.1 = 37c40009b6596
+    root.2 = 37c4000002b49
+    root.245 = 37c4000126c0d
+    root.246 = 37c4000999e01
+    root.249 = 37c400099c4c1
+    root.5 = 37c40000ef941
+    root.b = 37c400099eb81
+    root.d = 37c40009b1606
+    root.e = 37c40009b2a02
+    root.f = 37c40009b3341
+map 0: 806 bytes, 0%
+map 1: 1064 bytes, 0%
+map 2: 15160 bytes, 9%
+map 5: 3531 bytes, 2%
+map b: 1194 bytes, 0%
+map d: 80 bytes, 0%
+map e: 37 bytes, 0%
+map f: 201 bytes, 0%
+map 245: 138440 bytes, 86%
+map 246: 155 bytes, 0%
+map 249: 155 bytes, 0%
++27f80 chunkFooter chunk:df1,len:28,version:df1,fletcher:4708fbd1
+
+35000 chunkHeader chunk:df7,block:35,len:27,pages:29,max:2f9c0,map:2dd,next:d,root:37dc0009896d6,time:4870c5d3,version:df7,toc:266d6
++000ad node, map 2, 7 entries, 126 bytes, maxLen 80
+    30 children @ chunk df7 +0012b
+    26 children @ chunk df7 +006ba
+    27 children @ chunk df7 +00bd7
+    26 children @ chunk df7 +01145
+    34 children @ chunk df7 +01761
+    31 children @ chunk df7 +02150
+    46 children @ chunk df7 +02bc7
++0012b leaf, map 2, 30 entries, 1423 bytes, maxLen 600
++006ba leaf, map 2, 26 entries, 1309 bytes, maxLen 600
++00bd7 leaf, map 2, 27 entries, 1390 bytes, maxLen 600
++01145 leaf, map 2, 26 entries, 1564 bytes, maxLen 800
++01761 leaf, map 2, 34 entries, 2543 bytes, maxLen c00
++02150 leaf, map 2, 31 entries, 2679 bytes, maxLen c00
++02bc7 leaf, map 2, 46 entries, 4126 bytes, maxLen 1800
++03be5 node, map 5, 2 entries, 29 bytes, maxLen 20
+    12 children @ chunk df6 +000ca
+    7 children @ chunk df7 +03c02
++03c02 leaf, map 5, 7 entries, 1214 bytes, maxLen 600
++040c0 node, map 245, 19 entries, 200 bytes, maxLen 100
+    3 children @ chunk df7 +04188
+    2 children @ chunk df7 +042aa
+    5 children @ chunk df7 +04377
+    5 children @ chunk df7 +0457d
+    5 children @ chunk df7 +04756
+    5 children @ chunk df7 +04987
+    3 children @ chunk df7 +04bd2
+    3 children @ chunk df7 +04e0e
+    2 children @ chunk df7 +0a5a6
+    2 children @ chunk df7 +0c6f4
+    2 children @ chunk df7 +10374
+    2 children @ chunk df7 +1295c
+    1 children @ chunk df7 +14c51
+    1 children @ chunk df7 +163f4
+    2 children @ chunk df7 +19941
+    1 children @ chunk df7 +1b4c2
+    2 children @ chunk df7 +1b5e8
+    1 children @ chunk df7 +21b04
+    4 children @ chunk df5 +00a82
++04188 leaf, map 245, 3 entries, 290 bytes, maxLen 180
++042aa leaf, map 245, 2 entries, 205 bytes, maxLen 100
++04377 leaf, map 245, 5 entries, 518 bytes, maxLen 300
++0457d leaf, map 245, 5 entries, 473 bytes, maxLen 200
++04756 leaf, map 245, 5 entries, 561 bytes, maxLen 300
++04987 leaf, map 245, 5 entries, 587 bytes, maxLen 300
++04bd2 leaf, map 245, 3 entries, 572 bytes, maxLen 300
++04e0e leaf, map 245, 3 entries, 22424 bytes, maxLen 6000
++0a5a6 leaf, map 245, 2 entries, 8526 bytes, maxLen 3000
++0c6f4 leaf, map 245, 2 entries, 15488 bytes, maxLen 4000
++10374 leaf, map 245, 2 entries, 9704 bytes, maxLen 3000
++1295c leaf, map 245, 2 entries, 8949 bytes, maxLen 3000
++14c51 leaf, map 245, 1 entries, 6051 bytes, maxLen 1800
++163f4 leaf, map 245, 1 entries, 13645 bytes, maxLen 4000
++19941 leaf, map 245, 2 entries, 7041 bytes, maxLen 2000
++1b4c2 leaf, map 245, 1 entries, 294 bytes, maxLen 180
++1b5e8 leaf, map 245, 2 entries, 25884 bytes, maxLen 8000
++21b04 leaf, map 245, 1 entries, 16701 bytes, maxLen 6000
++25c41 node, map 246, 2 entries, 31 bytes, maxLen 20
+    24 children @ chunk df7 +25c60
+    27 children @ chunk df5 +00c9a
++25c60 leaf, map 246, 24 entries, 60 bytes, maxLen 40
++25c9c node, map 249, 2 entries, 31 bytes, maxLen 20
+    26 children @ chunk df5 +00cfb
+    25 children @ chunk df7 +25cbb
++25cbb leaf, map 249, 25 entries, 62 bytes, maxLen 40
++25cf9 node, map b, 2 entries, 29 bytes, maxLen 20
+    13 children @ chunk df7 +25d16
+    38 children @ chunk df5 +00d58
++25d16 leaf, map b, 13 entries, 89 bytes, maxLen 60
++25d6f leaf, map d, 2 entries, 80 bytes, maxLen 60
++25dbf leaf, map e, 2 entries, 37 bytes, maxLen 30
++25de4 node, map f, 2 entries, 31 bytes, maxLen 20
+    13 children @ chunk df7 +25e03
+    38 children @ chunk df5 +011b2
++25e03 leaf, map f, 13 entries, 48 bytes, maxLen 30
++25e33 leaf, map 1, 32 entries, 1064 bytes, maxLen 600
++2625b leaf, map 0, 16 entries, 1147 bytes, maxLen 600
+    chunk.df1 = chunk:df1,block:77,len:28,pages:2f,livePages:1,max:30c40,liveMax:400,map:2db,root:37c40009c6f94,time:486e2b17,unusedAtVersion:df6,version:df1,toc:274e4,occupancy:ffffffffff3f
+    chunk.df3 = chunk:df3,block:5,len:1,pages:2,livePages:0,max:c00,liveMax:0,map:2dd,root:37cc000013556,time:486e39d4,unused:4870c5d3,unusedAtVersion:df6,version:df3,toc:980,occupancy:03
+    chunk.df4 = chunk:df4,block:6,len:7,pages:7,livePages:0,max:87c0,liveMax:0,map:2dd,root:37d000019d356,time:486e9068,unused:4870c5d3,unusedAtVersion:df6,version:df4,toc:6caa,occupancy:7f
+    chunk.df5 = chunk:df5,block:2,len:2,pages:d,livePages:5,max:1ac0,liveMax:920,map:2dd,next:4,root:37d4000048bd4,time:486f1950,unusedAtVersion:df6,version:df5,toc:1547,occupancy:5715
+    chunk.df6 = chunk:df6,block:4,len:1,pages:3,livePages:1,max:1020,liveMax:c00,map:2dd,next:5,root:37d8000026e94,time:4870c5c7,unusedAtVersion:df6,version:df6,toc:d86,occupancy:05
+    meta.id = 1
+    root.1 = 37dc000978cd6
+    root.2 = 37dc000002b49
+    root.245 = 37dc00010300d
+    root.246 = 37dc000971041
+    root.249 = 37dc000972701
+    root.5 = 37dc0000ef941
+    root.b = 37dc000973e41
+    root.d = 37dc000975bc6
+    root.e = 37dc000976fc2
+    root.f = 37dc000977901
+map 0: 1147 bytes, 0%
+map 1: 1064 bytes, 0%
+map 2: 15160 bytes, 9%
+map 5: 1243 bytes, 0%
+map b: 118 bytes, 0%
+map d: 80 bytes, 0%
+map e: 37 bytes, 0%
+map f: 79 bytes, 0%
+map 245: 138113 bytes, 87%
+map 246: 91 bytes, 0%
+map 249: 93 bytes, 0%
++26f80 chunkFooter chunk:df7,len:27,version:df7,fletcher:830701d7
+
+5c000 eof
+
+page size total: 336472 bytes, page count: 139, average page size: 2420 bytes
+map 0: 8927 bytes, 2%
+map 1: 3192 bytes, 0%
+map 2: 30320 bytes, 9%
+map 5: 7091 bytes, 2%
+map b: 4634 bytes, 1%
+map d: 160 bytes, 0%
+map e: 74 bytes, 0%
+map f: 742 bytes, 0%
+map 245: 279878 bytes, 83%
+map 246: 731 bytes, 0%
+map 249: 723 bytes, 0%
+Created: 2025-01-12 13:17:26 (+0 s)
+Last modified: 2025-01-26 14:56:30 (+1215544 s)
+File length: 376832
+The last chunk is not listed
+Chunk length: 352256
+Chunk count: 7
+Used space: 92%
+Chunk fill rate: 47%
+Chunk fill rate excluding empty chunks: 48%
+  Chunk 3569: 2025-01-26 14:50:25 (+1215179 s), 1% used, 40 blocks
+  Chunk 3573: 2025-01-26 14:51:26 (+1215240 s), 0% used, 2 blocks, unused: 2025-01-26 14:53:19 (+1215353 s)
+  Chunk 3574: 2025-01-26 14:53:16 (+1215350 s), 73% used, 1 blocks
+  Chunk 3575: 2025-01-26 14:53:16 (+1215350 s), 97% used, 39 blocks
+  Chunk 3576: 2025-01-26 14:53:16 (+1215350 s), 0% used, 1 blocks, unused: 2025-01-26 14:53:19 (+1215353 s)
+  Chunk 3577: 2025-01-26 14:53:19 (+1215353 s), 26% used, 2 blocks
+  Chunk 3578: 2025-01-26 14:53:37 (+1215370 s), 40% used, 1 blocks
+

@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base-layout :: html(content=~{::div})}">
+<body>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.tiny.cloud/1/nrnqxssxm6bb3rllzgcslqo1lk838lqm7jqbh4yet8ov4ip7/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+        <h2 th:text="${#locale.language == 'ar' ? 'إنشاء مقال جديد' : 'Create New Article'}">Create New Article</h2>
+        <a href="javascript:history.back()" class="btn btn-outline-secondary">
+          <i class="fas fa-arrow-left me-2"></i>
+          <span th:text="${#locale.language == 'ar' ? 'رجوع' : 'Back'}">Back</span>
+        </a>
+      </div>
+
+      <!-- Alert Messages -->
+      <div th:if="${errorMessage}" class="alert alert-danger">
+        <span th:text="${errorMessage}">Error</span>
+      </div>
+
+      <!-- Article Form -->
+      <div class="card shadow">
+        <div class="card-body p-4">
+          <form th:action="@{/articles/new}" method="post" enctype="multipart/form-data" th:object="${article}" novalidate>
+            <!-- Title -->
+            <div class="mb-4">
+              <label for="title" class="form-label fw-bold"
+                     th:text="${#locale.language == 'ar' ? 'العنوان' : 'Title'}">Title</label>
+              <input type="text"
+                     class="form-control"
+                     id="title"
+                     th:field="*{title}"
+                     th:placeholder="${#locale.language == 'ar' ? 'أدخل عنوان المقال' : 'Enter article title'}"
+                     required>
+            </div>
+
+            <!-- Brief Description -->
+            <div class="mb-4">
+              <label for="brief" class="form-label fw-bold"
+                     th:text="${#locale.language == 'ar' ? 'وصف مختصر' : 'Brief Description'}">Brief Description</label>
+              <textarea class="form-control"
+                        id="brief"
+                        th:field="*{brief}"
+                        rows="3"
+                        th:placeholder="${#locale.language == 'ar' ? 'أدخل وصفاً مختصراً للمقال' : 'Enter a brief description'}"
+                        required></textarea>
+            </div>
+
+            <!-- Content Editor -->
+            <div class="mb-4">
+              <label for="content" class="form-label fw-bold"
+                     th:text="${#locale.language == 'ar' ? 'المحتوى' : 'Content'}">Content</label>
+              <textarea id="content"
+                        name="content"
+                        th:field="*{content}"
+                        class="form-control"
+                        required></textarea>
+            </div>
+            <!-- Domain and Keywords -->
+            <div class="row">
+              <div class="col-md-6 mb-4">
+                <label for="domain" class="form-label fw-bold"
+                       th:text="${#locale.language == 'ar' ? 'المجال' : 'Domain'}">Domain</label>
+                <select class="form-select"
+                        id="domain"
+                        th:field="*{domain}"
+                        required>
+                  <option value="" th:text="${#locale.language == 'ar' ? 'اختر المجال' : 'Select Domain'}">Select Domain</option>
+                  <option th:each="domain : ${domains}"
+                          th:value="${domain}"
+                          th:text="${domain}">Domain</option>
+                </select>
+              </div>
+              <div class="col-md-6 mb-4">
+                <label for="keywords" class="form-label fw-bold"
+                       th:text="${#locale.language == 'ar' ? 'الكلمات المفتاحية' : 'Keywords'}">Keywords</label>
+                <input type="text"
+                       class="form-control"
+                       id="keywords"
+                       name="keywordsInput"
+                       th:placeholder="${#locale.language == 'ar' ? 'أدخل الكلمات المفتاحية مفصولة بفواصل' : 'Enter keywords separated by commas'}">
+              </div>
+            </div>
+
+            <!-- Cover Image -->
+            <div class="mb-4">
+              <label for="coverImage" class="form-label fw-bold"
+                     th:text="${#locale.language == 'ar' ? 'صورة الغلاف' : 'Cover Image'}">Cover Image</label>
+              <input type="file"
+                     class="form-control"
+                     id="coverImage"
+                     name="coverImage"
+                     accept="image/*"
+                     required>
+              <div class="form-text" th:text="${#locale.language == 'ar' ? 'الحد الأقصى: 5 ميجابايت' : 'Maximum size: 5MB'}">
+                Maximum size: 5MB
+              </div>
+            </div>
+
+            <!-- File Upload -->
+            <div class="mb-4">
+              <label for="attachments" class="form-label fw-bold"
+                     th:text="${#locale.language == 'ar' ? 'الملف المرفق' : 'File Attachment'}">File Attachment</label>
+              <input type="file"
+                     class="form-control"
+                     id="attachments"
+                     name="attachments"
+                     accept=".pdf,.doc,.docx,.txt,.zip,.rar">
+              <div class="form-text" th:text="${#locale.language == 'ar' ? 'الحد الأقصى: 10 ميجابايت' : 'Maximum size: 10MB'}">
+                Maximum size: 10MB
+              </div>
+            </div>
+
+            <!-- Submit Buttons -->
+            <div class="d-flex justify-content-end gap-2">
+              <button type="button" onclick="history.back()" class="btn btn-outline-secondary">
+                <i class="fas fa-times me-2"></i>
+                <span th:text="${#locale.language == 'ar' ? 'إلغاء' : 'Cancel'}">Cancel</span>
+              </button>
+              <button type="button" class="btn btn-info" onclick="previewArticle()">
+                <i class="fas fa-eye me-2"></i>
+                <span th:text="${#locale.language == 'ar' ? 'معاينة' : 'Preview'}">Preview</span>
+              </button>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-paper-plane me-2"></i>
+                <span th:text="${#locale.language == 'ar' ? 'ارسال المقال' : 'Submit Article'}">Submit Article</span>
+              </button>
+            </div>
+          </form>
+          <!-- Preview Modal -->
+          <div class="modal fade" id="previewModal" tabindex="-1">
+            <div class="modal-dialog modal-xl">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" th:text="${#locale.language == 'ar' ? 'معاينة المقال' : 'Article Preview'}">Article Preview</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="preview-container">
+                    <h1 id="previewTitle" class="mb-4"></h1>
+
+                    <div class="article-meta mb-4">
+                      <div class="badge bg-primary mb-2" id="previewDomain"></div>
+                      <div class="text-muted" id="previewKeywords"></div>
+                    </div>
+
+                    <div class="card mb-4">
+                      <div class="card-body">
+                        <h5 class="card-title" th:text="${#locale.language == 'ar' ? 'ملخص المقال' : 'Article Brief'}">Article Brief</h5>
+                        <p class="card-text" id="previewBrief"></p>
+                      </div>
+                    </div>
+
+                    <div class="preview-cover mb-4">
+                      <img id="previewCover" class="img-fluid rounded" style="max-height: 400px; width: 100%; object-fit: cover;">
+                    </div>
+
+                    <div class="preview-content" id="previewContent"></div>
+
+                    <!-- Replace the existing preview attachment section in the modal -->
+                    <div id="previewAttachment" class="mt-4" style="display: none;">
+                      <h5 th:text="${#locale.language == 'ar' ? 'الملف المرفق' : 'Attachment'}">Attachment</h5>
+                      <div class="attachment-card">
+                        <div class="attachment-icon" id="previewFileIcon">
+                          <!-- Icon will be set via JavaScript -->
+                        </div>
+                        <div class="attachment-details">
+                          <div class="attachment-name" id="previewAttachmentName"></div>
+                          <div class="attachment-meta">
+                            <span id="previewFileSize" class="file-size"></span>
+                            <span class="file-type" id="previewFileType"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>
+                    <span th:text="${#locale.language == 'ar' ? 'إغلاق' : 'Close'}">Close</span>
+                  </button>
+                  <button type="button" class="btn btn-primary" onclick="submitFromPreview()">
+                    <i class="fas fa-paper-plane me-2"></i>
+                    <span th:text="${#locale.language == 'ar' ? 'ارسال المقال' : 'Submit Article'}">Submit Article</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize TinyMCE
+      tinymce.init({
+        selector: '#content',
+        plugins: 'image table lists link media wordcount autolink code codesample directionality emoticons fullscreen insertdatetime link lists media nonbreaking pagebreak preview searchreplace table visualblocks visualchars wordcount',
+        toolbar: 'undo redo | formatselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen preview | insertfile image media link anchor codesample | ltr rtl',
+        height: 500,
+        image_advtab: true,
+        images_upload_url: '/api/upload-image',
+        automatic_uploads: true,
+        images_reuse_filename: true,
+        file_picker_types: 'image',
+        file_picker_callback: function(cb, value, meta) {
+          var input = document.createElement('input');
+          input.setAttribute('type', 'file');
+          input.setAttribute('accept', 'image/*');
+
+          input.onchange = function() {
+            var file = this.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function() {
+              var id = 'blobid' + (new Date()).getTime();
+              var blobCache = tinymce.activeEditor.editorUpload.blobCache;
+              var base64 = reader.result.split(',')[1];
+              var blobInfo = blobCache.create(id, file, base64);
+              blobCache.add(blobInfo);
+
+              cb(blobInfo.blobUri(), { title: file.name });
+            };
+            reader.readAsDataURL(file);
+          };
+
+          input.click();
+        },
+        images_upload_handler: function (blobInfo, success, failure) {
+          var xhr = new XMLHttpRequest();
+          xhr.withCredentials = false;
+          xhr.open('POST', '/api/upload-image');
+
+          xhr.onload = function() {
+            if (xhr.status !== 200) {
+              failure('HTTP Error: ' + xhr.status);
+              return;
+            }
+
+            var json = JSON.parse(xhr.responseText);
+            if (!json || typeof json.location != 'string') {
+              failure('Invalid JSON: ' + xhr.responseText);
+              return;
+            }
+            success(json.location);
+          };
+
+          var formData = new FormData();
+          formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+          xhr.send(formData);
+        },
+        content_style: `
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+                font-size: 16px;
+                color: var(--text-primary);
+                background: var(--background-primary);
+            }
+        `,
+        skin: document.body.classList.contains('dark-theme') ? 'oxide-dark' : 'oxide',
+        directionality: document.dir || 'ltr'
+      });
+
+      // Initialize Bootstrap modal
+      const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
+
+      // Utility functions for file handling
+      function getFileIcon(fileName) {
+        const extension = fileName.split('.').pop().toLowerCase();
+        switch (extension) {
+          case 'pdf':
+            return '<i class="fas fa-file-pdf"></i>';
+          case 'doc':
+          case 'docx':
+            return '<i class="fas fa-file-word"></i>';
+          case 'xls':
+          case 'xlsx':
+            return '<i class="fas fa-file-excel"></i>';
+          case 'jpg':
+          case 'jpeg':
+          case 'png':
+          case 'gif':
+            return '<i class="fas fa-file-image"></i>';
+          case 'zip':
+          case 'rar':
+            return '<i class="fas fa-file-archive"></i>';
+          case 'txt':
+            return '<i class="fas fa-file-alt"></i>';
+          default:
+            return '<i class="fas fa-file"></i>';
+        }
+      }
+
+      function getFileIconClass(fileName) {
+        const extension = fileName.split('.').pop().toLowerCase();
+        switch (extension) {
+          case 'pdf':
+            return 'pdf';
+          case 'doc':
+          case 'docx':
+            return 'word';
+          case 'xls':
+          case 'xlsx':
+            return 'excel';
+          case 'jpg':
+          case 'jpeg':
+          case 'png':
+          case 'gif':
+            return 'image';
+          case 'zip':
+          case 'rar':
+            return 'archive';
+          case 'txt':
+            return 'text';
+          default:
+            return '';
+        }
+      }
+
+      function formatFileSize(bytes) {
+        if (!bytes) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+      }
+
+      // Add preview function to window scope
+      window.previewArticle = function() {
+        // Validate form before showing preview
+        if (!validateForm()) return;
+
+        // Get form values
+        const title = document.getElementById('title').value;
+        const brief = document.getElementById('brief').value;
+        const content = tinymce.get('content').getContent();
+        const domain = document.getElementById('domain').value;
+        const keywords = document.getElementById('keywords').value;
+        const coverImage = document.getElementById('coverImage').files[0];
+        const attachment = document.getElementById('attachments').files[0];
+
+        // Update preview content
+        document.getElementById('previewTitle').textContent = title;
+        document.getElementById('previewBrief').textContent = brief;
+        document.getElementById('previewContent').innerHTML = content;
+        document.getElementById('previewDomain').textContent = domain;
+        document.getElementById('previewKeywords').textContent = keywords;
+
+        // Handle cover image preview
+        if (coverImage) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            document.getElementById('previewCover').src = e.target.result;
+            document.getElementById('previewCover').style.display = 'block';
+          };
+          reader.readAsDataURL(coverImage);
+        } else {
+          document.getElementById('previewCover').style.display = 'none';
+        }
+
+        // Handle attachment preview
+        const attachmentPreview = document.getElementById('previewAttachment');
+        if (attachment) {
+          const iconContainer = document.getElementById('previewFileIcon');
+          iconContainer.innerHTML = getFileIcon(attachment.name);
+          iconContainer.className = 'attachment-icon ' + getFileIconClass(attachment.name);
+
+          document.getElementById('previewAttachmentName').textContent = attachment.name;
+          document.getElementById('previewFileSize').textContent = formatFileSize(attachment.size);
+          document.getElementById('previewFileType').textContent = attachment.name.split('.').pop().toUpperCase();
+          attachmentPreview.style.display = 'block';
+        } else {
+          attachmentPreview.style.display = 'none';
+        }
+
+        // Show preview modal
+        previewModal.show();
+      };
+
+      // Submit from preview modal
+      window.submitFromPreview = function() {
+        document.querySelector('form').submit();
+      };
+
+      // Error messages for validation
+      const errorMessages = {
+        ar: {
+          title: 'العنوان مطلوب',
+          brief: 'الوصف المختصر مطلوب',
+          content: 'المحتوى مطلوب',
+          domain: 'المجال مطلوب',
+          coverImage: 'صورة الغلاف مطلوبة'
+        },
+        en: {
+          title: 'Title is required',
+          brief: 'Brief description is required',
+          content: 'Content is required',
+          domain: 'Domain is required',
+          coverImage: 'Cover image is required'
+        }
+      };
+
+      // Validation helper functions
+      function showError(element, message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'invalid-feedback d-block';
+        errorDiv.textContent = message;
+        element.classList.add('is-invalid');
+        element.parentNode.appendChild(errorDiv);
+      }
+
+      function clearErrors() {
+        document.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
+        document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+      }
+
+      function validateForm() {
+        clearErrors();
+        const lang = document.documentElement.lang || 'en';
+        const messages = errorMessages[lang];
+        let isValid = true;
+
+        const title = document.getElementById('title').value.trim();
+        const brief = document.getElementById('brief').value.trim();
+        const content = tinymce.get('content')?.getContent().trim();
+        const domain = document.getElementById('domain').value;
+        const coverImage = document.getElementById('coverImage').files.length;
+
+        if (!title) {
+          showError(document.getElementById('title'), messages.title);
+          isValid = false;
+        }
+
+        if (!brief) {
+          showError(document.getElementById('brief'), messages.brief);
+          isValid = false;
+        }
+
+        if (!content) {
+          showError(tinymce.get('content').getContainer(), messages.content);
+          isValid = false;
+        }
+
+        if (!domain) {
+          showError(document.getElementById('domain'), messages.domain);
+          isValid = false;
+        }
+
+        if (!coverImage) {
+          showError(document.getElementById('coverImage'), messages.coverImage);
+          isValid = false;
+        }
+
+        return isValid;
+      }
+
+      // Handle form submission
+      const form = document.querySelector('form');
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (validateForm()) {
+          this.submit();
+        }
+      });
+
+      // Image preview functionality
+      const coverImageInput = document.getElementById('coverImage');
+      if (coverImageInput) {
+        coverImageInput.addEventListener('change', function(e) {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            const preview = document.querySelector('.current-image img');
+            if (preview) {
+              reader.onload = function(e) {
+                preview.src = e.target.result;
+              }
+              reader.readAsDataURL(file);
+            }
+          }
+        });
+      }
+    });
+  </script>
+</div>
+
+<style>
+  .preview-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    overflow-x: hidden;
+
+  }
+
+  .preview-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+
+  .preview-content img {
+    margin: 1rem 0;
+    max-width: 100% !important;
+    height: auto !important;
+    display: block;
+  }
+
+  #submitBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .modal-xl {
+    max-width: 1200px;
+  }
+  .card {
+    border: none;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .form-label {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .form-control {
+    border: 2px solid var(--border-color);
+    padding: 0.75rem;
+    color: var(--text-primary);
+    background-color: var(--background-primary);
+  }
+
+  .form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(26, 115, 232, 0.1);
+  }
+
+  #editor {
+    min-height: 400px;
+    padding: 1rem;
+    overflow-y: auto;
+    background-color: var(--background-primary);
+    color: var(--text-primary);
+    border: 2px solid var(--border-color);
+    border-top: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  #editor:focus {
+    outline: none;
+    border-color: var(--primary-color);
+  }
+
+  .editor-toolbar {
+    border-bottom: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .editor-toolbar .btn-group {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .editor-toolbar select {
+    min-width: 100px;
+    padding-right: 1.5rem;
+  }
+
+  .editor-toolbar button,
+  .editor-toolbar select {
+    height: 35px;
+    border: 1px solid var(--border-color);
+    background: var(--background-primary);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .preview-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .preview-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+
+  .preview-content img {
+    max-width: 100%;
+    height: auto;
+    margin: 1rem 0;
+  }
+
+  .modal-xl {
+    max-width: 1200px;
+  }
+
+  .editor-toolbar button:hover,
+  .editor-toolbar select:hover {
+    background: var(--background-secondary);
+    border-color: var(--primary-color);
+  }
+
+  /* File List Styling */
+  .file-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background-color: var(--background-secondary);
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+  }
+
+  .file-item .file-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .file-item .file-size {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+
+  .file-item .remove-file {
+    color: #dc3545;
+    cursor: pointer;
+    padding: 0.25rem;
+  }
+
+  /* RTL Support */
+  [dir="rtl"] .editor-toolbar button i {
+    transform: scaleX(-1);
+  }
+
+  [dir="rtl"] .file-item {
+    flex-direction: row-reverse;
+  }
+
+  /* Editor Styles */
+  .ck-editor__editable {
+    min-height: 400px !important;
+    border-color: var(--border-color) !important;
+  }
+
+  .ck.ck-editor__main>.ck-editor__editable {
+    background: var(--background-primary) !important;
+    color: var(--text-primary) !important;
+  }
+
+  .ck.ck-toolbar {
+    background: var(--background-secondary) !important;
+    border-color: var(--border-color) !important;
+  }
+
+  .ck.ck-button {
+    color: var(--text-primary) !important;
+    background: var(--background-primary) !important;
+  }
+
+  .ck.ck-button:hover {
+    background: var(--background-secondary) !important;
+  }
+
+  .ck.ck-button.ck-on {
+    background: var(--primary-color) !important;
+    color: white !important;
+  }
+
+  .content-editor {
+    min-height: 500px;
+    font-size: 1rem;
+    line-height: 1.6;
+    padding: 1.25rem;
+    resize: vertical;
+    font-family: var(--font-body);
+    transition: all 0.3s ease;
+  }
+
+  .content-editor:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(26, 115, 232, 0.1);
+  }
+
+  /* Dark theme support */
+  .dark-theme .content-editor {
+    background-color: var(--background-primary);
+    color: var(--text-primary);
+  }
+
+  .content-editor {
+    min-height: 500px;
+    font-size: 1rem;
+    line-height: 1.6;
+    padding: 1.25rem;
+    resize: vertical;
+    font-family: var(--font-body);
+    transition: all 0.3s ease;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  .content-editor:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(26, 115, 232, 0.1);
+  }
+
+  .editor-toolbar {
+    border-bottom: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .editor-toolbar .btn-group {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .editor-toolbar button {
+    height: 32px;
+    width: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .editor-toolbar button:hover {
+    background-color: var(--background-secondary);
+    border-color: var(--primary-color);
+  }
+
+  /* Dark theme support */
+  .dark-theme .content-editor {
+    background-color: var(--background-primary);
+    color: var(--text-primary);
+  }
+
+  .is-invalid {
+    border-color: #dc3545 !important;
+  }
+
+  .invalid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
+  }
+
+  .is-invalid ~ .invalid-feedback {
+    display: block;
+  }
+
+  /* File Attachment Styles */
+  .attachment-card {
+    display: flex;
+    align-items: center;
+    background: var(--background-secondary);
+    border-radius: 8px;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .attachment-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 1.5rem;
+  }
+
+  .attachment-icon.pdf {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .attachment-icon.word {
+    background-color: #0d6efd;
+    color: white;
+  }
+
+  .attachment-icon.excel {
+    background-color: #198754;
+    color: white;
+  }
+
+  .attachment-icon.image {
+    background-color: #6f42c1;
+    color: white;
+  }
+
+  .attachment-icon.archive {
+    background-color: #fd7e14;
+    color: white;
+  }
+
+  .attachment-icon.text {
+    background-color: #6c757d;
+    color: white;
+  }
+
+  .attachment-details {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .attachment-name {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .attachment-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+
+  .file-type {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+</style>
+
+</body>
+</html>
